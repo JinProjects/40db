@@ -18,12 +18,6 @@ public class AdminBooksController {
 	@Autowired
 	public AdminBooksRepository bookRepository;
 	
-	@GetMapping("/main")
-	public String test(Model model) {
-		//model.addAttribute("list", bookApi.findBooks("java"));
-
-		return "main";
-	}
 	@GetMapping("/books/bookDelete/{bookNo}")
 	public String bookDelete(@PathVariable("bookNo") String bookNo) {
 		bookRepository.deleteById(Long.valueOf(bookNo));
