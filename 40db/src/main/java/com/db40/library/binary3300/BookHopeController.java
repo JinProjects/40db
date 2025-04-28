@@ -2,10 +2,13 @@ package com.db40.library.binary3300;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -120,13 +123,28 @@ public class BookHopeController {
     } 
 	
 	//관리자, 희망도서 디테일 확인 페이지
-	@GetMapping("/hopeBook/hopeAdminDetail")
-	public String hopeAdminDetail(Model model) {
+	@GetMapping("/hopeBook/hopeAdminDetail/{id}")
+	public String hopeAdminDetail(@PathVariable Long id, Model model) {
+		model.addAttribute("dto",bookHopeService.find(id) );
 		return "/hopeBook/hope_admin_detail";
 	}
 	 
 	// 관리자, 희망도서 반려하기/등록하기 업데이트에서 하나로 될거같음
+	@PostMapping("/hopeBook/hopeAdminUpdate")
+    public String hopeAdminUpdate(@RequestParam("bookHopeNo") Long bookHopeNo,
+            					  @RequestParam("status") String status, Model model) {
+		boolean success = bookHopeService.hopeAdminUpdate(bookHopeNo, status);
+        return "hopeBook/hope_admin_detail";
+    } 
 	
+    @GetMapping("/hopeBook/hopeAdminUpdate")
+    public String showAdminDetailPage(HttpServletRequest request , Model model) {
+    	String hopeStatUpdate =  request.getParameter("hopeStatUpdate");
+    	//String hopeStatUpdate =  (String)request.getAttribute("hopeStatUpdate");
+    	System.out.println("hopeStatUpdate="+ hopeStatUpdate);
+       // model.addAttribute("bookHope", bookHope);
+        return "redirect:/hopeBook/hope_list";
+    }
 	
 
 }
