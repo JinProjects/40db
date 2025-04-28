@@ -79,7 +79,35 @@ public class MemberService {
 		
 		memberRepository.updateAddressInMypage(mI, aP, aR, aJ, aD);
 	}
-
+	
+	public void updateMobileNumerInMypage(String mI, String mN) {
+		memberRepository.updateMobileNumberInMypage(mI, mN);
+	}
+	
+	public void updateDisplayNameInMypage(String mI, String dN) {
+		memberRepository.updateDisplayNameInMypage(mI, dN);
+	}
+	
+	public void deleteAccountInMypage(Long id, String rN, String mP) {
+		 Optional<Member> find = memberRepository.findById(id);
+		 
+		 if (find.isEmpty()) {
+		        throw new IllegalArgumentException("회원 정보를 찾을 수 없습니다."); }
+		 
+		 Member member = find.get();
+		 
+		 if (!passwordEncoder.matches(mP, member.getMemberPass())) {
+		        throw new IllegalArgumentException("비밀번호 불일치"); 
+		 }
+		 
+		 if (!rN.equals(member.getRealName())) { 
+			 System.out.println("실명 불일치");
+		 }
+		 
+		 memberRepository.deleteById(id);
+	}
+	
+	
 	
 	//selectAll
 	public List<Member> selectMemberAll(){  
@@ -114,32 +142,28 @@ public class MemberService {
 	public Member selectUserMemberId(String memberId) {
 		return memberRepository.findByMemberId(memberId).get();
 	}
-	
+
+	/* ajax - 데이터 가져오기 */
+	/* ajax - 데이터 가져오기 */
 	// 이메일
 	public Member selectUserEmail(String email) {
-		return memberRepository.findByEmail(email).get();
-	}
-	
+		return memberRepository.findByEmail(email).get(); }
 	// displayName 가져오기 
 	public String selectdisplayNameByMemberId(String memberId) {
-		return memberRepository.findByMemberId(memberId).map(Member::getDisplayName).orElse("");
-	}
-	
+		return memberRepository.findByMemberId(memberId).map(Member::getDisplayName).orElse(""); }
 	// Email 가져오기 
 	public String selectEmailByMemberId(String memberId) {
-		return memberRepository.findByMemberId(memberId).map(Member::getEmail).orElse("");
-	}
+		return memberRepository.findByMemberId(memberId).map(Member::getEmail).orElse(""); }
 	// address 가져오기 
 	public String selectAddressPostByMemberId(String memberId) {
-		return memberRepository.findByMemberId(memberId).map(Member::getAddressPost).orElse("");
-	}
+		return memberRepository.findByMemberId(memberId).map(Member::getAddressPost).orElse(""); }
 	public String selectAddressRoadByMemberId(String memberId) {
-		return memberRepository.findByMemberId(memberId).map(Member::getAddressRoad).orElse("");
-	}
+		return memberRepository.findByMemberId(memberId).map(Member::getAddressRoad).orElse(""); }
 	public String selectAddressJibunByMemberId(String memberId) {
-		return memberRepository.findByMemberId(memberId).map(Member::getAddressJibun).orElse("");
-	}
+		return memberRepository.findByMemberId(memberId).map(Member::getAddressJibun).orElse(""); }
 	public String selectAddressDetailByMemberId(String memberId) {
-		return memberRepository.findByMemberId(memberId).map(Member::getAddressDetail).orElse("");
-	}
+		return memberRepository.findByMemberId(memberId).map(Member::getAddressDetail).orElse(""); }
+	// MobileNumber 가져오기
+	public String selectMobileNumberByMemberId(String memberId) {
+		return memberRepository.findByMemberId(memberId).map(Member::getMobileNumber).orElse(""); }
 }

@@ -58,7 +58,7 @@ public class MemberForm {
 	private LocalDate birthDate;
 
 	@NotEmpty(message="별명을 입력하지 않았습니다")
-	@Pattern( regexp = "^[가-힣a-zA-Z0-9]{2,32}$",
+	@Pattern( regexp = "^[가-힣a-zA-Z0-9]{2,20}$",
 		      message = "별명은 한글, 영문자, 숫자만 가능하며 2자 이상 32자 이하로 입력해주세요." )
 	private String displayName;
 }
