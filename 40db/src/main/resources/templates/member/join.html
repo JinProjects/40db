@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<!-- ##1 -->
+<head>
+<meta charset="UTF-8">
+<title>새 사용자 가입</title>
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<style> body { 
+			background-color: #D9D9D9; 
+		} </style>
+		
+
+			<div class="container d-flex justify-content-center align-items-center mt-5" style="min-height: 100vh;">
+				<div class="card shadow" style="max-width: 600px;">
+					<div class="card-body">
+						<h3 class="text-center mb-4">회원가입</h3>
+
+						<form method="post" th:action="@{/member/join}"
+							th:object="${memberForm}" class="needs-validation" novalidate>
+
+							<!-- 오류 발생 -->
+							<div class="alert alert-danger text-center" role="alert"
+								th:if="${#fields.hasAnyErrors()}">
+								<div th:each="err: ${#fields.allErrors()}" th:text="${err}"></div>
+							</div>
+
+							<!-- 아이디 -->
+							<div class="form-floating mb-3 position-relative">
+							    <input type="text" name="memberId" id="username" th:field="*{memberId}"
+							        class="form-control" placeholder="아이디">
+							    <label for="username">아이디<span style="font-size: 11px; color:gray;"> (영문 숫자로만 조합, 4-20자)</span></label>
+							<!-- 아이디 중복 체크 -->
+							    <div class="resultMId mt-1 ps-2 small"></div>
+							</div>
+
+							<!-- 비밀번호 -->
+							<div class="form-floating mb-3">
+								<input type="password" name="memberPass" id="password"
+									class="form-control" th:field="*{memberPass}"
+									placeholder="비밀번호"> <label for="password">비밀번호</label>
+							</div>
+
+							<!-- 비밀번호 확인 -->
+							<div class="form-floating mb-3">
+								<input type="password" name="password2" id="password2"
+									class="form-control" th:field="*{password2}"
+									placeholder="비밀번호확인"> <label for="password2">비밀번호
+									확인</label>
+									<div class="resultPassword2 mt-1 ps-2 small"></div>
+							</div>
+
+							<!-- 실명 -->
+							<div class="form-floating mb-3">
+								<input type="text" name="realName" id="realName"
+									class="form-control" th:field="*{realName}" placeholder="실명">
+								<label for="realName">실명</label>
+							</div>
+
+							<!-- 휴대폰 -->
+							<div class="form-floating mb-3">
+								<input type="tel" name="mobileNumber" id="mobileNumber"
+									class="form-control" th:field="*{mobileNumber}"
+									placeholder="휴대전화번호" maxlength="11"> <label
+									for="mobileNumber">휴대전화번호<span style="font-size: 11px; color:gray;"> (-없이 숫자만 입력)</span></label>
+							</div>
+
+							<!-- 생년월일 -->
+							<div class="form-floating mb-3">
+								<input type="date" name="birthDate" id="birthDate" max="2099-12-31"
+									class="form-control" th:field="*{birthDate}" placeholder="생년월일">
+								<label for="birthDate">생년월일</label>
+							</div>
+
+							<!-- 성별 -->
+							<div class="d-flex justify-content-end">
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="gender"
+										id="gender" th:value="F" th:field="*{gender}"> <label
+										class="form-check-label" for="female">여성</label>
+								</div>
+
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="gender"
+										id="gender" th:value="M" th:field="*{gender}"> <label
+										class="form-check-label" for="male">남성</label>
+								</div>
+							</div>
+							<p />
+
+							<!-- 이메일 -->
+							<div class="form-floating mb-3 position-relative">
+							    <input type="text" name="email" id="email" th:field="*{email}"
+							        class="form-control" placeholder="이메일">
+							    <label for="email">이메일</label>
+							    
+							<!-- 이메일 중복 체크 -->
+							    <div class="resultEmail mt-1 ps-2 small"></div>
+							</div>
+
+
+
+							<!-- 주소 -->
+							<div class="mb-3">
+								<label class="form-label">주소</label>
+
+								<!-- 우편번호 + 검색 버튼 -->
+								<div class="row g-2 mb-2">
+									<div class="col-md-6">
+										<input type="text" name="addressPost" id="addressPost" th:field="*{addressPost}"
+											class="form-control" placeholder="우편번호" readonly>
+									</div>
+									<div class="col-md-6">
+										<button type="button" class="btn btn-outline-primary w-100"
+											onclick="addressFinder()">검색</button>
+									</div>
+								</div>
+
+								<!-- 도로명 / 지번 주소 -->
+								<div class="row g-2 mb-2">
+									<div class="col-md-6">
+										<input type="text" name="addressRoad" id="addressRoad"
+											class="form-control" th:field="*{addressRoad}"
+											placeholder="도로명주소" readonly>
+									</div>
+									<div class="col-md-6">
+										<input type="text" name="addressJibun" id="addressJibun"
+											class="form-control" th:field="*{addressJibun}"
+											placeholder="지번주소" readonly>
+									</div>
+								</div>
+
+								<!-- 상세 주소 -->
+								<div class="row g-2 mb-2">
+									<div class="col-md-6">
+										<!-- 상세 주소 입력창 -->
+										<input type="text" name="addressDetail" id="addressDetail"
+											class="form-control" th:field="*{addressDetail}"
+											placeholder="상세주소" />
+
+										<!-- 주소 안내 표시용 -->
+										<small id="addressGuide" class="form-text text-muted"></small>
+									</div>
+									<div class="col-md-6">
+										<input type="text" name="addressExtra" id="addressExtra"
+											class="form-control" placeholder="참조주소" readonly>
+									</div>
+								</div>
+							</div>
+							<!-- 닉네임 -->
+							<div class="form-floating mb-3">
+								<input type="text" name="displayName" id="displayName"
+									class="form-control" th:field="*{displayName}" th:value="${nickname}" placeholder="별명">
+								<label for="email">별명<span style="font-size: 11px; color:gray;"> (한글, 영문, 숫자로만 조합, 2-32자)</span></label>
+							</div>
+
+							<!-- 제출 버튼 -->
+							<div class="d-flex justify-content-center">
+								<input type="submit" class="btn btn-primary w-50 me-2"
+									value="회원가입" />
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+		
+
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script>
+			// 아이디 양식 체크
+			$(function() {
+			    $("#username").on("keyup", function() {
+			    	$(".resultMId").removeClass("d-none");
+			        let mid = $(this).val().trim();
+			        
+			        // 아이디가 비어있으면 resultMId 숨기기
+			        if (mid.length === 0) {
+			            $(".resultMId").fadeOut().empty();
+			            $("#username").removeClass("is-valid is-invalid");
+			            return; // 빈 값이면 바로 종료
+			        }
+
+			        // 아이디 길이가 4자 이상일 때만 검사 시작
+			        if (mid.length < 4) {
+			            $(".resultMId")
+			                .removeClass("success text-success fail text-danger")
+			                .addClass("d-none");
+			            $("#username").removeClass("is-valid is-invalid");
+			            return; // 길이가 4자 미만이면 바로 종료
+			        }
+
+			        // 아이디 형식이 올바른지 검사 (영어 대소문자(필수)+숫자(선택)만, 4-20자)
+			        const mIdPattern = /^(?=.*[a-zA-Z])[a-zA-Z0-9]{4,20}$/;
+			        if (!mIdPattern.test(mid)) {
+			            $(".resultMId")
+			                .removeClass("success text-success")
+			                .addClass("fail text-danger")
+			                .html("⚠️ 올바른 아이디 형식이 아닙니다");
+			            $("#username")
+			                .removeClass("is-valid")
+			                .addClass("is-invalid");
+			            return; // 형식이 올바르지 않으면 바로 종료
+			        }
+
+			        // 형식이 올바르면 중복 체크로 넘어감
+			        $(".resultMId").fadeIn();
+			        reduplicationMIdCheck(mid);
+			    });
+			});
+			// 아이디 중복 체크
+			function reduplicationMIdCheck(mid) {
+			    $.ajax({
+			        url: "/40db/member/join/reduplicationMId/" + encodeURIComponent(mid),
+			        type: "GET",
+			        dataType: "json",
+			        success: function(json) {
+	
+			            if (json.resultMId === "사용가능") {
+			                $(".resultMId")
+			                    .removeClass("fail text-danger")
+			                    .addClass("success text-success")
+			                    .html("✔️ 사용 가능한 아이디입니다!");
+			                $("#username")
+			                    .removeClass("is-invalid")
+			                    .addClass("is-valid");
+			            } else {
+			                $(".resultMId")
+			                    .removeClass("success text-success")
+			                    .addClass("fail text-danger")
+			                    .html("❌ 이미 사용 중인 아이디입니다.");
+			                $("#username")
+			                    .removeClass("is-valid")
+			                    .addClass("is-invalid");
+			            }
+			        },
+			        error: function(xhr, status, msg) {
+			            console.error("에러 발생:", status + " / " + msg);
+			        }
+			    });
+			}
+			// 포커스(입력커서)가 벗어난 경우 메시지 숨김
+			$(function() {
+				$("#username").on("blur", function() {
+					$(".resultMId").addClass("d-none");
+				});
+			});
+			
+			// 비밀번호 일치 체크
+			// 비밀번호 확인을 입력할 때
+			$(function() {
+				$("#password2").on("keyup", function() {
+					$(".resultPassword2").removeClass("d-none");
+					let pass1 = $("#password").val().trim();
+					let pass2 = $(this).val().trim();
+					
+					if (pass2 === pass1) {
+						$(".resultPassword2")
+							.removeClass("fail text-danger")
+							.addClass("success text-success")
+							.html("✔️ 비밀번호가 일치합니다");
+						$("#password2")
+		                    .removeClass("is-invalid")
+		                    .addClass("is-valid");
+					} else {
+						$(".resultPassword2")
+							.removeClass("success text-success")
+							.addClass("fail text-danger")
+							.html("❌ 비밀번호가 일치하지 않습니다");
+						$("#password2")
+		                    .removeClass("is-valid")
+		                    .addClass("is-invalid");
+					}
+				});
+			});
+			// 사용할 비밀번호를 입력할 때
+			$(function() {
+				$("#password").on("keyup", function() {
+					let pass1 = $(this).val().trim();
+					let pass2 = $("#password2").val().trim();
+					
+					if (pass2 !== "") {
+						if (pass1 !== pass2) {
+							$(".resultPassword2")
+								.removeClass("success text-success d-none")
+								.addClass("fail text-danger")
+								.html("❌ 비밀번호가 일치하지 않습니다");
+							$("#password2")
+			                    .removeClass("is-valid")
+			                    .addClass("is-invalid");
+						} else if (pass1 === pass2) {
+							$(".resultPassword2")
+							.removeClass("fail text-danger")
+							.addClass("success text-success")
+							.html("✔️ 비밀번호가 일치합니다");
+						$("#password2")
+		                    .removeClass("is-invalid")
+		                    .addClass("is-valid");
+						}
+					}
+				});
+			});
+			// 포커스 벗어나면 알림 숨김 및 아무것도 없으면 초기화
+			$(function() {
+				$("#password, #password2").on("blur", function() {
+					$(".resultPassword2").addClass("d-none");
+					let pass1 = $("#password").val().trim();
+					let pass2 = $("#password2").val().trim();
+					
+					if ((pass1==="")&&(pass2==="")) {
+						$(".resultPassword2") .removeClass("success text-success fail text-danger");
+						$("#password2").removeClass("is-valid is-invalid");
+					}
+				});
+			});
+
+			
+			// 이메일 중복 체크
+			// 이메일 양식 확인
+			$(function() {
+			    $("#email").on("keyup", function() {
+			        let email = $(this).val().trim();
+			
+			        // 이메일이 비어있으면 바로 종료
+			        if (email.length === 0) {
+			            $(".resultEmail").fadeOut().empty();
+			            $("#email").removeClass("is-valid is-invalid");
+			            return;
+			        }
+			
+			        // 이메일 형식 체크 ( 이메일@도메인.주소 )
+			        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+			        if (!emailPattern.test(email)) {
+			            $(".resultEmail")
+			                .removeClass("success text-success")
+			                .addClass("fail text-danger")
+			                .html("⚠️ 올바른 이메일 형식이 아닙니다.");
+			            $("#email")
+			                .removeClass("is-valid")
+			                .addClass("is-invalid");
+			            $(".resultEmail").fadeIn();
+			            return; // 이메일 형식이 올바르지 않으면 바로 종료
+			        }
+			
+			        // 이메일 형식이 맞으면 중복 체크 넘어감
+			        $(".resultEmail").fadeIn();
+			        reduplicationEmailCheck(email);
+			    });
+			});
+			// 이메일 중복 체크
+			function reduplicationEmailCheck(email) {
+			    $.ajax({
+			        url: "/40db/member/join/reduplicationEmail/" + encodeURIComponent(email),
+			        type: "GET",
+			        dataType: "json",
+			        success: function(json) {
+			            if (json.resultEmail === "사용가능") {
+			                $(".resultEmail")
+			                    .removeClass("fail text-danger")
+			                    .addClass("success text-success")
+			                    .html("✔️ 사용 가능한 이메일입니다!");
+			                $("#email")
+			                    .removeClass("is-invalid")
+			                    .addClass("is-valid");
+			            } else {
+			                $(".resultEmail")
+			                    .removeClass("success text-success")
+			                    .addClass("fail text-danger")
+			                    .html("❌ 이미 사용 중인 이메일입니다.");
+			                $("#email")
+			                    .removeClass("is-valid")
+			                    .addClass("is-invalid");
+			            }
+			        },
+			        error: function(xhr, status, msg) {
+			            console.error("에러 발생:", status + " / " + msg);
+			        }
+			    });
+			}
+			// 포커스 벗어나면 알림 숨김
+			$(function() {
+				$("#email").on("blur", function() {
+					$(".resultEmail").addClass("d-none");
+				});
+			});
+			
+			// 휴대전화 번호 체크
+			// 휴대전화 번호 양식 확인
+			$(function() {
+			    $("#mobileNumber").on("keyup", function() {
+			        let mNum = $(this).val().trim();
+			
+			        // 휴대전화 번호가 비어있으면 바로 종료
+			        if (mNum.length === 0) {
+			            $("#mobileNumber")
+			                .removeClass("is-valid is-invalid");
+			            return; // 비어있으면 바로 종료
+			        }
+			
+			        // 휴대전화 번호 형식 확인 ( 숫자만, 11자리 )
+			        const mNumStyle = /^[0-9]{11}$/;
+			        if (!mNumStyle.test(mNum)) {
+			            $("#mobileNumber")
+			                .removeClass("is-valid")
+			                .addClass("is-invalid");
+			        } else {
+			            $("#mobileNumber")
+			                .removeClass("is-invalid")
+			                .addClass("is-valid");
+			        }
+			    });
+			});
+			
+			// 별명
+			// 별명 형식 체크
+			$(function() {
+			    $("#displayName").on("keyup", function() {
+			        let dName = $(this).val().trim();
+			
+			        // 정규식: 한글, 영문, 숫자 2~32자
+			        const dNameStyle = /^[가-힣a-zA-Z0-9]{2,32}$/;
+			
+			        // 공백이 있거나, 정규식 통과 못하면 invalid 처리
+			        if (dName.includes(" ") || !dNameStyle.test(dName)) {
+			            $("#displayName")
+			                .removeClass("is-valid")
+			                .addClass("is-invalid");
+			        } else {
+			            $("#displayName")
+			                .removeClass("is-invalid")
+			                .addClass("is-valid");
+			        }
+			    });
+			});
+		</script>
+		<script>
+			function addressFinder() {
+				new daum.Postcode(
+						{
+							oncomplete : function(data) {
+								// 도로명 주소 변수
+								var roadAddr = data.roadAddress;
+								// 참고 항목 변수
+								var extraRoadAddr = '';
+
+								// 법정동명이 있을 경우 추가
+								if (data.bname !== ''
+										&& /[동|로|가]$/g.test(data.bname)) {
+									extraRoadAddr += data.bname;
+								}
+
+								// 건물명이 있고, 공동주택일 경우 추가
+								if (data.buildingName !== ''
+										&& data.apartment === 'Y') {
+									extraRoadAddr += (extraRoadAddr !== '' ? ', '
+											+ data.buildingName
+											: data.buildingName);
+								}
+
+								// 표시할 참고항목이 있을 경우, 괄호까지 추가
+								if (extraRoadAddr !== '') {
+									extraRoadAddr = ' (' + extraRoadAddr + ')';
+								}
+
+								// 우편번호와 주소 정보를 해당 필드에 넣는다.
+								document.getElementById('addressPost').value = data.zonecode; // 우편번호
+								document.getElementById('addressRoad').value = roadAddr; // 도로명 주소
+								document.getElementById('addressJibun').value = data.jibunAddress; // 지번 주소
+
+								// 참고항목이 있을 경우 해당 필드에 넣는다.
+								if (roadAddr !== '') {
+									document.getElementById('addressExtra').value = extraRoadAddr;
+								} else {
+									document.getElementById('addressExtra').value = '';
+								}
+
+								// 상세주소 입력 안내
+								var guideTextBox = document
+										.getElementById("addressGuide");
+
+								if (data.autoRoadAddress) {
+									var expRoadAddr = data.autoRoadAddress
+											+ extraRoadAddr;
+									guideTextBox.innerText = '(예상 도로명 주소 : '
+											+ expRoadAddr + ')';
+									guideTextBox.style.display = 'block';
+								} else if (data.autoJibunAddress) {
+									var expJibunAddr = data.autoJibunAddress;
+									guideTextBox.innerText = '(예상 지번 주소 : '
+											+ expJibunAddr + ')';
+									guideTextBox.style.display = 'block';
+								} else {
+									guideTextBox.innerText = '';
+									guideTextBox.style.display = 'none';
+								}
+							}
+						}).open();
+			}
+		</script>
+	</div>
+</body>
+</html>

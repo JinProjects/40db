@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<!-- ##1 -->
+<head>
+<meta charset="UTF-8">
+<title>비밀번호 변경</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<style>
+body {
+	background-color: #D9D9D9;
+}
+</style>
+
+		<div
+			style="display: flex; justify-content: center; height: 720px; align-items: center">
+
+			<!-- 비밀번호 변경 -->
+			<div class="card shadow p-5" style="width: 380px; height: 450px;">
+				<h3 class="text-center mb-4 fw-bold">새 비밀번호 변경</h3>
+
+				<form method="post" th:action="@{/member/foundpw}" onsubmit="return passConfirm()"
+					style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+					
+					<!-- 직전 페이지에서 일치하는 정보의 ID(PK) 값을 가져옴 -->
+					<input type="hidden" name="id" id="id" class="form-control" th:value="${success}" readonly>
+					
+					
+					
+					<!-- 새 비밀번호 입력 -->
+					<div class="form-floating mb-3">
+						<input type="password" name="memberPass" id="password"
+							class="form-control"  placeholder="비밀번호">
+						<label for="password">새 비밀번호</label>
+					</div>
+
+					<!-- 비밀번호 확인 -->
+					<div class="form-floating mb-3">
+						<input type="password" name="password2" id="password2"
+							class="form-control"  placeholder="비밀번호확인">
+						<label for="password2">비밀번호 확인</label>
+						<span class="d-none" id="warning"
+						style="font-size: 12px; text-align: center; color: #EF2B2A;">
+						비밀번호가 일치하지 않습니다</span>
+					</div>
+
+
+					<!-- 찾기 -->
+					<div class="row"
+						style="display: flex; justify-content: space-around;">
+						<input type="submit"
+							class="btn btn-outline-warning col-4 text-dark" value="변경" />
+					</div>
+				</form>
+			</div>
+<script>
+	function passConfirm() {
+		var pass1 = document.querySelector("#password");
+		var pass2 = document.querySelector("#password2");
+		if (pass1.value !== pass2.value) { 
+			document.getElementById("password2").style.borderColor = "#EF2B2A";
+			document.getElementById("warning").classList.remove("d-none");
+			return false;
+			} 
+		return true;
+	}
+</script>
+		</div>
+
+
+	</div>

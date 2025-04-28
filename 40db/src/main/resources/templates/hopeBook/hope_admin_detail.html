@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{fragments/layout}">
+<head>
+<meta charset="UTF-8">
+<title>40db wish list</title>
+</head>
+<body>
+<div layout:fragment="content" class="container pt-5">
+	<h2 class="text-center">희망도서 신청 상세</h2>
+	<h4>신청 확인</h4>
+			<div class="my-3">
+				<label for="title" class="form-label">제목</label>
+				<p th:text="${param.title}"/>
+			</div>
+			<div class="my-3">
+				<label for="writer" class="form-label">저자</label>
+				<p th:value="${param.author}"/>
+			</div>
+			<div class="my-3">
+				<label for="publisher" class="form-label">출판사</label>
+				<p th:value="${param.publisher}"/>
+			</div>
+			<div class="my-3">
+				<label for="isbn" class="form-label">ISBN</label>
+				<p th:value="${param.isbn13}" />
+			</div>
+			<div>
+				<label for="opinion">신청사유</label>
+				<p th:value="${param.opinion}"/>
+			</div>
+			<div>
+				<button type="reset" class="btn btn-outline-primary">반려(씨알도안먹힌다는뜻. 리스트형식으로 신청도서목록에 남기)</button>
+				<button type="submit" class="btn btn-primary">등록(데이터베이스에 들어가는버튼)</button>
+			</div>
+</div>
+</body>
+</html>

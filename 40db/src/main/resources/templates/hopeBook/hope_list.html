@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{fragments/layout}">
+<head>
+<meta charset="UTF-8">
+<title>40db wish list</title>
+</head>
+<body>
+<div layout:fragment="content" class="container pt-5">
+	<div class="container pt-5 p-3">
+		<h2 class="text-center">희망도서 신청</h2>
+		<h4>희망도서 신청 현황</h4>
+			<table class="table table-bordered table-hover text-center">
+				<caption>희망도서 신청현황</caption>
+				<thead>
+					<tr>
+						<th scope="col">번호</th>
+						<th scope="col">제목</th>
+						<th scope="col">저자</th>
+						<th scope="col">출판사</th>
+						<th scope="col">등록일</th>
+						<th scope="col">처리상태</th>
+					</tr>
+				</thead>
+		  		<tbody>
+					<tr th:each=" dto,state : ${list} " >
+						<td th:text="${dto.bookHopeNo}" ></td>
+						<td th:text="${dto.book_title}"><a sec:authorize="hasRole('ROLE_ADMIN')" href="/hopeBook/hope_admin_detail"></a></td>
+						<td th:text="${dto.book_auther}"></td>
+						<td th:text="${dto.book_publisher}"></td>
+						<td th:text="${ #temporals.format(dto.createDate, 'yyyy-MM-dd HH:mm')  }"></td>
+						<td>처리상태</td>
+					</tr>
+				</tbody>
+
+				<tfoot>
+					<tr>
+						<!-- # -->
+						<td colspan="5">
+							<!-- # -->
+							<ul class="pagination  justify-content-center">
+								<!-- # -->
+								<!-- 이전 -->
+								<li class="page-item" th:if="${ paging.start  >=   paging.bottomlist }">
+									<a class="page-link" th:href="@{/hopeBook/hope_list(page=${paging.start-2})}"><span>이전</span></a>
+										
+								</li>
+
+								<!--  paging / current=1, start=1, end=10  -->
+								<!-- 1 2 3 4 5 6 7 8 9 10   -->
+								<li th:each=" i :  ${  #numbers.sequence(  paging.start, paging.end,1)  }  "
+									th:classappend=" ${ paging.current == i }  ? active">
+									<a th:text="${i}" class="page-link"
+									   th:href="@{/hopeBook/hope_list(page=${i-1})}"></a>
+								</li>
+
+								<!-- 다음 -->
+								<li class="page-item" th:if="${paging.pagetotal >   paging.end}">
+									<a class="page-link" th:href="@{/hopeBook/hope_list(page=${paging.end})}"><span>다음</span></a>
+										
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		<script> 
+		    let msg = "[[${msg}]]";   
+		    //오류나면 주석지우기    Thymeleaf 데이터 바이딩- 서버에서 js 코드 전달
+		    if( msg == 'fail'){ history.go(-1); alert("정보를 확인해주세요.");}
+			else if(msg.length != 0){ alert( msg ); }
+		</script>
+
+	</div>
+</div>
+</body>
+</html>

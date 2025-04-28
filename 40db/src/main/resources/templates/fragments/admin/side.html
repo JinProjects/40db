@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div th:fragment="side">
+      <h2 class="mx-3">대시보드</h2>
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" th:href="@{/admin/membersManage}">회원관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/booksManage}">도서관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">희망도서현황</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">반납확인</a>
+        </li>
+      </ul>
+      <hr class="d-sm-none">
+    </div>
+    <!-- <script th:include="javascript"></script> -->
+    <script type="text/javascript"></script>
+</body>
+</html>

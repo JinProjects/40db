@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/layout}">
+<!-- ##1 -->
+<head>
+<meta charset="UTF-8">
+<title>아이디 찾음</title>
+</head>
+
+	<div layout:fragment="content">
+		<style>
+			body {
+				background-color: #D9D9D9;
+			}
+		</style>
+	<div class="d-flex justify-content-center align-items-center" style="height:70vh">
+	<!-- 아이디찾기 -->
+  	<div class="card shadow p-5 d-flex" style="width: 380px; height: 450px;">
+    	<h3 class="text-center mb-4 fw-bold">아이디를 찾았습니다!</h3>
+    
+  
+	      <!-- 찾은 아이디 표시 -->
+	      <div class="form-floating mb-3">
+	      <br>
+	        <p class="d-flex justify-content-center" style="font-size:20px" th:text="${realName+'님의 아이디'}"></p>
+	        <h1><span class="badge text-dark d-flex justify-content-center" th:text="${found}"></span></h1>
+	      </div>
+	      <br>
+	      <div class="d-flex justify-content-center">
+	      	<a th:href="@{/member/login}" class="btn btn-primary col-5">로그인하기</a><br>
+	      </div>
+	      <br> <br>
+	      <span class="d-flex justify-content-center"><a th:href="@{/member/findpw}" style="font-size: 11px; text-decoration: none; color: gray;">비밀번호가 기억나지 않습니다</a></span>
+
+			</div>
+	</div>

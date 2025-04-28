@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+layout:decorate="~{fragments/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- Latest compiled and minified CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<!-- Latest compiled JavaScript -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			 // 모달 버튼에 이벤트를 건다.  
+	 	 	$('#openModalBtn').on('click', function(){    
+				 $('#modalBox').modal('show');
+				 console.log("click open");  }); 
+			 // 모달 안의 취소 버튼에 이벤트를 건다.  
+			 $('#closeModalBtn').on('click', function(){    
+				 $('#modalBox').modal('hide');	
+				 $(".book_result tbody").empty();
+				 $("#findBook").val("");
+				 $("#findKeywords").val("");
+				 console.log("click close");  
+				 });  
+			 $('#modalBox').on('show.bs.modal', function (e) { 
+					 console.log("show.bs.modal"); 
+					 });  
+			 $('#modalBox').on('shown.bs.modal', function (e) {   
+				 console.log("shown.bs.modal");  
+				 });  
+			 $('#modalBox').on('hide.bs.modal', function (e) {   
+				 console.log("hide.bs.modal");  
+				 });  
+			 $('#modalBox').on('hidden.bs.modal', function (e) { 
+				 console.log("hidden.bs.modal"); 
+				 });
+			let searchBtn = document.getElementById('searchBtn');
+			let bookRegBtn = document.getElementById('bookRegBtn');
+			const successModalEl = document.getElementById('successAlertModal');
+		    const successModalInstance = successModalEl ? new bootstrap.Modal(successModalEl, {
+		        keyboard: false,
+		        backdrop: 'static'
+		    }) : null;
+
+		    if (!successModalInstance) {
+		        console.error("Success modal element with ID 'successAlertModal' not found!");
+		    }
+			
+			searchBtn.addEventListener('click', function(){
+				let selectKeyword = document.getElementById('findKeywords').value;
+				let searchWord = document.getElementById('findBook').value;
+				$(".book_result tbody").empty();
+				if(selectKeyword == ''){
+					alert("옵션을 선택해주세요!")
+					return;	
+				}
+				if(searchWord == ''){
+					alert("검색어를 입력해주세요!")
+					return;	
+				}
+				$.ajax({
+					url:"/40db/books/findBook/"+encodeURIComponent(searchWord)+"/"+encodeURIComponent(selectKeyword)+"?ajax=true",
+					type:"GET",
+					dataType:"json",
+				 	contentType:"application/json;charset=UTF-8",
+					error:function(xhr, status, msg){ 
+						console.log("에러");
+						console.log(status + "/" + msg);
+					},
+					success:function(json){
+						console.log(json.item);
+						//$(".book_result tbody").empty();
+						let tableBody = $(".book_result tbody");
+						if(json && json.item && json.item.length > 0){
+							let items = json.item;
+							for(let i=0; i<items.length; i++){
+						 		let book_title = items[i].title;
+								let book_isbn = items[i].isbn;
+								let book_cover = items[i].cover;
+								let book_author = items[i].author;
+								let book_publisher = items[i].publisher;
+								let book_description = items[i].description;
+								let book_published_date= items[i].pubDate;
+								let book_total_page = '500';
+								let category_name = items[i].categoryName;
+								let book_category_name = items[i].categoryName.replace("국내도서>","").substring(0,category_name.replace("국내도서>","").indexOf(">"));
+								let row = `
+									<tr>
+										<td>${book_title}</td>
+										<td>${book_isbn}</td>
+										<td><img src="${book_cover}" alt="${book_title}" style="width:50px; height:auto"></td>
+										<td>${book_author}</td>
+										<td>${book_publisher}</td>
+										<td>${book_category_name}</td>
+										<td><a href="#" class="btn btn-success btn-sm register-btn" id="bookRegBtn"
+											data-book_title="${book_title}"
+											data-book_isbn="${book_isbn}"
+											data-book_cover="${book_cover}"
+											data-book_author="${book_author}"
+											data-book_publisher="${book_publisher}"
+											data-book_description="${book_description}"
+											data-book_published_date="${book_published_date}"
+											data-book_category_name="${book_category_name}"
+											>등록</a></td>
+									</tr>
+								`
+								tableBody.append(row);
+							}
+						}else{
+							 tableBody.append('<tr><td colspan="7">검색 결과가 없습니다.</td></tr>');
+						}
+					}
+				})
+			});
+			/* 책등록 */
+			  $(".book_result tbody").on('click', '.register-btn', function(event) {
+			        event.preventDefault(); // a 태그의 기본 동작(페이지 이동) 막기
+			        let button = $(this);
+			        console.log("button="+button);
+			        if(button.prop('disabled')){
+			        	return;
+			        }
+			        let categoryName = decodeURIComponent(button.data('book_category_name'));
+			        console.log(categoryName);
+			        let bookData = {
+			                bookTitle: decodeURIComponent(button.data('book_title')),
+			                bookIsbn: button.data('book_isbn'), // ISBN은 보통 인코딩 불필요
+			                bookCover: decodeURIComponent(button.data('book_cover')),
+			                bookAuthor: decodeURIComponent(button.data('book_author')),
+			                bookPublisher: decodeURIComponent(button.data('book_publisher')),
+			                bookDescription: decodeURIComponent(button.data('book_description')),
+			                bookPublishedDate: button.data('book_published_date'),
+			                // 필요시 다른 데이터 추가
+			            };
+			        
+			        console.log("Registering book:", bookData.book_title);
+
+			        // 버튼 임시 비활성화 (중복 클릭 방지)
+			        //button.prop('disabled', true).text('처리중...');
+
+			        // 2. 서버에 책 등록 요청 (AJAX POST)
+			        $.ajax({
+			            url: '/40db/admin/insertBook?bookCategoryName='+encodeURIComponent(categoryName), // Controller의 POST 엔드포인트 URL
+			            type: 'POST',
+			            contentType: 'application/json; charset=UTF-8', // 서버가 JSON을 기대하는 경우
+			            data: JSON.stringify(bookData), // JavaScript 객체를 JSON 문자열로 변환
+			            dataType: 'json', // 서버로부터 받을 응답 타입 (서버 응답에 따라 조정)
+			            // CSRF 토큰 전송 (Spring Security 사용 시)
+			            beforeSend: function(xhr) {
+			                let token = $("meta[name='_csrf']").attr("content");
+			                let header = $("meta[name='_csrf_header']").attr("content");
+			                if (token && header) {
+			                    xhr.setRequestHeader(header, token);
+			                } else {
+			                     // 메타 태그가 없다면 경고. CSRF 비활성화 상태이거나 설정 오류일 수 있음.
+			                     console.warn("CSRF meta tags not found. Ensure they are present in <head> or CSRF is properly configured.");
+			                }
+			            },
+			            success: function(response) {
+			                // <<< 3. 등록 성공 시 >>>
+			                console.log("Registration successful:", response);
+							let successAlertMessage = $('#successAlertMessage');
+			                let msg = response.status;
+							let bookCategoryName= encodeURIComponent(categoryName);
+							console.log('response.status='+response.status);
+							if(response.status == 'exist'){
+							/* 	$.ajax({
+									url:"/40db/admin/bookChk?msg="+msg+"&bookCategoryName="+bookCategoryName,
+									type:"POST",
+									contentType:"application/json; charset=utf-8",
+									data:JSON.stringify(bookData),
+									dataType:"json",
+									error:function(){},
+									success:function(response){ */
+										//if(response.status == 'success'){
+											 $('#existBookModal').modal('show');
+											 $('.modal-result').append('이미 등록된 도서입니다. 등록하시겠습니까?');
+											 let btnExistBookReg = document.getElementById('btnExistBookReg');//$('.btnExistBookReg');
+											 btnExistBookReg.addEventListener('click',function(){
+												 $.ajax({
+													 url:"/40db/admin/existBookReg?bookCategoryName="+bookCategoryName,
+													 type:"POST",
+													 contentType:"application/json; charset=utf-8",
+													 data:JSON.stringify(bookData),
+													 dataType:"json",
+													 error:function(){},
+													 success:function(response){
+													 	if(response.status == 'success'){
+													 		successModalInstance.show();
+													 		successAlertMessage.empty();
+															 successAlertMessage.append( bookData.bookTitle +' 등록되었습니다.');										
+										                    // 2초 후에 모달 숨기기
+										                     setTimeout(() => {
+										                        successModalInstance.hide();
+										                        //window.location.reload();
+										                    }, 2000); //2초 
+													 	}
+													 	
+													 	 $('#existBookModal').modal('hide');
+													 	if(response.status == 'error'){
+													 		successModalInstance.show();
+													 		successAlertMessage.append('등록에 실패했습니다. 서버 관리자에게 연락해주세요.');	
+
+										                    // 2초 후에 모달 숨기기
+										                    setTimeout(() => {
+										                        successModalInstance.hide();
+										                    }, 2000); // 2초
+													 	}
+													 }
+												 })
+											 });
+										//}end if
+									//}end success
+								//})end ajax
+			                }
+			                
+			                if(response.status == 'success'){
+			                	//alert("modal");
+			                	successModalInstance.show();
+								 successAlertMessage.append( bookData.bookTitle +' 등록되었습니다.');										
+
+			                    // 1초 후에 모달 숨기기
+			                    setTimeout(() => {
+			                        successModalInstance.hide();
+			                        //window.location.reload();
+			                    }, 1000); // 1초
+			                }
+			                // 성공 알림 모달 표시
+			               /*  if (successModalInstance) {
+			                	alert("modal");
+			                    // 필요시 모달 메시지 변경
+			                    // $("#successAlertMessage").text("'" + bookData.book_title + "' 등록 완료!");
+			                    successModalInstance.show();
+
+			                    // 1초 후에 모달 숨기기
+			                    setTimeout(() => {
+			                        successModalInstance.hide();
+			                    }, 1000); // 1초
+			                } else {
+			                    // 모달 인스턴스가 없으면 기본 alert 사용
+			                    alert("'" + bookData.book_title + "' 도서가 등록되었습니다.");
+			                } */
+
+
+			                // 버튼 상태 업데이트 (성공했으므로 '등록됨'으로 변경하고 비활성화 유지)
+			               // button.removeClass('btn-success').addClass('btn-secondary').text('등록됨');
+			                // button.prop('disabled', true); // 이미 위에서 비활성화 함
+
+			            },
+			            error: function(xhr, status, error) {
+			                // <<< 4. 등록 실패 시 >>>
+			                console.error("Registration failed:", status, error, xhr);
+			                // 사용자에게 오류 알림
+			                alert('책 등록 중 오류가 발생했습니다: ' + (xhr.responseJSON?.message || error));
+			                // 실패 시 버튼 다시 활성화
+			                button.prop('disabled', false).text('등록');
+			            }
+			        }); // end $.ajax POST
+			        
+			        
+			        
+			       // let form = $("#hiddenRegisterForm");
+					
+			        // 숨겨진 폼의 input 필드 값 설정 (data-* 속성 값 읽어서 디코딩 후 설정)
+			       /*  form.find('input[name="bookTitle"]').val(decodeURIComponent(button.data('book_title')));
+			        form.find('input[name="bookIsbn"]').val(button.data('book_isbn')); // ISBN은 보통 인코딩 불필요
+			        form.find('input[name="bookCover"]').val(decodeURIComponent(button.data('book_cover')));
+			        form.find('input[name="bookAuthor"]').val(decodeURIComponent(button.data('book_author')));
+			        form.find('input[name="bookPublisher"]').val(decodeURIComponent(button.data('book_publisher')));
+			        form.find('input[name="bookDescription"]').val(decodeURIComponent(button.data('book_description')));
+			        form.find('input[name="bookPublishedDate"]').val(button.data('book_published_date')); // 날짜 형식 확인 필요
+			        form.find('input[name="bookCategoryName"]').val(decodeURIComponent(button.data('book_category_name')));
+			        // 필요한 다른 필드 설정
+
+			        console.log("Submitting form with data:", {
+			            book_title: form.find('input[name="book_title"]').val(),
+			            book_isbn: form.find('input[name="book_isbn"]').val(),
+			            // ... 다른 값들도 로깅 ...
+			        });
+
+			        // 폼 제출 (POST 방식으로 /40db/admin/insertBook 요청)
+			        form.submit(); */
+			        
+			    });
+	    });
+		
+		 /* let modal = document.getElementById('openModalBtn');
+		 modal.addEventListener('click',function(){
+			 //alert('클릭');
+			 console.log('클릭');
+		 }); */
+		 /* function btnBookReg(){
+				
+		} */
+		<!-- Vertically centered scrollable modal -->
+	
+	</script>
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<div class="container mt-3">
+		  <h2>도서관리</h2>
+		  <p>The .table-hover class enables a hover state (grey background on mouse over) on table rows:</p>            
+		  <table style="caption-side: top;" class="table table-hover">
+		  <caption>도서리스트</caption>
+		    <thead>
+		      <tr class="table-secondary">
+		        <th>번호</th>
+		        <th>도서명</th>
+		        <th>isbn</th>
+		        <th>입고일</th>
+		        <th>삭제</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		   	<div th:if="${list != null}">
+		      <tr th:each="dto, status : ${list}">
+		        <td th:text="${dto.bookNo}"></td>
+		        <td th:text="${dto.bookTitle}"></td>
+		        <td th:text="${dto.bookIsbn}"></td>
+		        <td th:text="${#temporals.format(dto.bookEnteredDate,'yyyy-MM-dd')}"></td>
+		        <td><p><a class="btn btn-warning btn-sm" th:href="@{|/books/bookDelete/${dto.bookNo}|}" th:text="삭제"></a> </p></td>
+		      </tr>
+	        </div>
+	            <div th:if="${list == null}">
+	        	<td style="text-align: center;" colspan="5">등록 된 도서가 존재하지 않습니다.</td>
+	        </div>
+		    </tbody>
+		  </table>
+			  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+			  	<!-- <button class="btn btn-info btn-sm" id="openModalBtn" th:text="도서등록"></button> -->
+			  	<button class="btn btn-info btn-sm" id="openModalBtn" >도서등록</button>
+			  </div>
+			 <!-- modal -->
+		  <div class="modal fade" id="modalBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog modal-xl" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="myModalLabel">도서검색</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">	
+				<!-- <div class="container">
+					<label for="findBook" class="form-label d-inline-block">도서검색</label>
+					<input type="text" class="form-control d-inline-block" id="findBook">
+					<button class="btn btn-info d-inline-block">검색</button>
+				</div> -->
+					<div class="container">
+						<label for="findBook" class="form-label">도서검색</label>
+						<div class="d-flex">
+							<select name="findKeywords" id="findKeywords">
+								<option value="">선택</option>
+								<option value="title">서명</option>
+								<option value="author">저자</option>
+								<option value="publisher">발행자</option>
+							</select>
+							<input type="text" class="form-control" id="findBook" style="width:200px" placeholder="검색어를 입력하세요">
+							<button type="button" class="btn btn-info ms-2" id="searchBtn">검색</button>
+							</div>
+							<div class="container mt-3 .table-responsive-lg" id="body">
+								<table class="table table-bordered book_result">
+								    <thead>
+								      <tr>
+								        <th style="width: 23.66%">도서명</th>
+								        <th style="width: 16.66%">ISBN</th>
+								        <th style="width: 5%">이미지</th>
+								        <th style="width: 16.66%">저자</th>
+								        <th style="width: 16.66%">발행자</th>
+								        <th style="width: 5%">카테고리</th>
+								        <th style="width: 8%">등록</th>
+								      </tr>
+								    </thead>
+								    <tbody>
+								    </tbody>
+								  </table>
+								 <!-- 책 등록 데이터를 전송하기 위한 숨겨진 폼 -->
+									<form id="hiddenRegisterForm" th:action="@{/admin/insertBook}" method="POST" style="display: none;">
+									    <input type="hidden" name="bookTitle">
+									    <input type="hidden" name="bookIsbn">
+									    <input type="hidden" name="bookCover">
+									    <input type="hidden" name="bookAuthor">
+									    <input type="hidden" name="bookPublisher">
+									    <input type="hidden" name="bookDescription">
+									    <input type="hidden" name="bookPublishedDate">
+									    <input type="hidden" name="bookEnteredDate">
+									    <input type="hidden" name="bookCategoryName">
+									    <!-- 필요한 다른 필드 추가 -->
+									</form>
+									
+									   <!-- 등록 성공 알림 모달 -->
+								    <div class="modal fade" id="successAlertModal" tabindex="-1" aria-labelledby="successAlertLabel" aria-hidden="true">
+								      <div class="modal-dialog modal-sm modal-dialog-centered"> <!-- 작고 중앙 정렬 -->
+								        <div class="modal-content">
+								          <div class="modal-body text-center py-4"> <!-- 내부 패딩 및 텍스트 중앙 정렬 -->
+								            <!-- 부트스트랩 아이콘 (선택 사항, 없어도 됨) -->
+								            <i class="bi bi-check-circle-fill text-success fs-1 mb-2"></i>
+								            <p id="successAlertMessage"></p>
+								          </div>
+								        </div>
+								      </div>
+								    </div>
+							</div>
+						</div>
+					</div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			      </div>
+		      </div>
+		      <!-- The Modal -->
+			<!-- 존재하는 도서 등록확인 창 -->
+				<div class="modal" id="existBookModal">
+				  <div class="modal-dialog modal-sm">
+				    <div class="modal-content">
+				
+				      <!-- Modal Header -->
+				      <div class="modal-header">
+				        <h4 class="modal-title">도서등록확인</h4>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				      </div>
+				      <!-- Modal body -->
+				      <div class="modal-body modal-result">
+				      </div>
+				      <!-- Modal footer -->
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-info btnExistBookReg" id="btnExistBookReg">등록</button>
+				        <button type="button" class="btn btn-danger" >취소</button>
+				      </div>
+				
+				    </div>
+				  </div>
+				</div>
+																	
+		    </div>
+		  </div>
+	</th:block>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+layout:decorate="~{fragments/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- Latest compiled and minified CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<!-- Latest compiled JavaScript -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script th:inline="javascript">
+	$(function(){
+		let $btnMemberUpdate = $('.btnMemberUpdate');
+		let listStatus = $();
+		let memberId = '';
+		$btnMemberUpdate.on('click', function(e){
+			let $clickedButton = $(this);
+			let $row = $clickedButton.closest('tr');
+			
+			let $inputVal = $clickedButton.siblings('.memberId');
+			memberId = $inputVal[0].value;
+			
+			let $showStatus = $row.find('.showStatus');
+			let $updateStatus = $row.find('.updateStatus');
+			let $updateWrap = $row.find('.updateWrap');
+			let $MemberIdElement = $row.find('.memberId');
+			
+			console.log($showStatus);
+			
+			/* let showStatus = $('.showStatus');
+			let updateStatus = $('.updateStatus');
+			let updateWrap = $('.updateWrap'); */
+			let listStatusHtml = `<select class="listStatus">
+								<option value='1'>정상</option> 
+								<option value='2'>휴면계정</option> 
+								<option value='3'>영구정지</option>
+								</select>
+			`;
+			listStatus = $(listStatusHtml);
+			//let memberId = $('.memberId').eq(2).val();
+			//console.log(memberId); 
+			let btnUpdateDoneHtml = `<a class="btn btn-warning btn-sm btnUpdateDone" data-member-id="${memberId}" >완료</a>`;
+			let btnUpdateDone = $(btnUpdateDoneHtml);
+			
+			//updateForm.append(btnUpdateDone);
+			
+			$showStatus.hide();
+			$clickedButton.hide();
+			$updateWrap.empty().append(btnUpdateDone);
+			$updateStatus.empty().append(listStatus);
+			
+			/* btnUpdateDone.on('click',function(){
+				let listStatusVal = listStatus.val();
+				let memberIdVal = this.memberId.val();
+				let hiddenForm = $(".hiddenForm");
+				let updateForm = $('<form></form>')
+				updateForm.attr("name","updateForm");
+				updateForm.attr("method","post");
+				updateForm.attr("action","/40db/admin/memberUpdate");
+				let inputMemberId = $(`<input type="hidden" value="${memberIdVal}" name="memberId" />`);
+				let inputMemberStatus = $(`<input type="hidden" value="${listStatusVal}" name="statusVal" />`);
+				console.log("inputMemberId="+inputMemberId.val());
+				console.log("inputMemberStatus="+inputMemberStatus.val());
+				
+				updateForm.append(inputMemberId);
+				updateForm.append(inputMemberStatus);
+				hiddenForm.append(updateForm);
+				//updateForm.submit();
+			}) */
+		})
+		
+		$('.member-result tbody').on('click','.btnUpdateDone',function(){
+		     let $thisDoneButton = $(this); // 클릭된 '완료' 버튼
+	         let $row = $thisDoneButton.closest('tr'); // 해당 행 찾기
+	        
+				let listStatusVal = listStatus.val();
+				let memberIdVal = memberId;
+				let hiddenForm = $(".hiddenForm");
+				let updateForm = $('<form></form>')
+				updateForm.attr("name","updateForm");
+				updateForm.attr("method","post");
+				updateForm.attr("action","/40db/admin/memberUpdate");
+				let inputMemberId = $(`<input type="hidden" value="${memberIdVal}" name="memberId" />`);
+				let inputMemberStatus = $(`<input type="hidden" value="${listStatusVal}" name="statusVal" />`);
+				console.log("inputMemberId="+inputMemberId.val());
+				console.log("inputMemberStatus="+inputMemberStatus.val());
+				
+				updateForm.append(inputMemberId);
+				updateForm.append(inputMemberStatus);
+				hiddenForm.append(updateForm);
+				updateForm.submit();
+			})
+	})
+	</script>
+</head>
+<body>
+	<th:block layout:fragment="content">
+		<div class="container mt-3">
+		  <h2>회원관리</h2>
+		  <p>The .table-hover class enables a hover state (grey background on mouse over) on table rows:</p>            
+		  <table style="caption-side: top" class="table table-hover member-result">
+		  <caption>회원리스트</caption>
+		    <thead>
+		      <tr class="table-secondary">
+		        <th>회원아이디</th>
+		        <th>이메일</th>
+		        <th>휴대폰번호</th>
+		        <th>주소</th>
+		        <th>경고횟수</th>
+		        <th>회원상태</th>
+		        <th>가입일</th>
+		        <th>IP</th>
+		        <th>수정</th>
+		        <th>탈퇴</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		    	<div th:if="${list != null}">
+		      <tr th:each="dto, status : ${list}">
+		        <td th:text="${dto.memberId}"></td>
+		        <td th:text="${dto.email}"></td>
+		        <td th:text="${dto.mobileNumber}"></td>
+		        <td th:text="|${dto.addressPost} ${dto.addressRoad} ${dto.addressJibun} ${dto.addressDetail}|"></td>
+		        <td th:text="${dto.memberWarning}"></td>
+		        <td class="updateStatus" ><p th:text="${dto.memberStatus.status}" class="showStatus"></p> </td>
+		        <td th:text="${#temporals.format(dto.memberJoinDate,'yyyy-MM-dd')}"></td>
+		        <td th:text="${dto.joinIp}"></td>
+		        <td><p class="updateWrap">
+		        		<a class="btn btn-warning btn-sm btnMemberUpdate" th:text="수정"></a>
+		        		<input type="hidden" class="memberId" th:value="${dto.memberId}">
+		        </p></td>
+		        <td><p><a class="btn btn-warning btn-sm" th:href="@{|/admin/memberDelete/${dto.memberId}|}" th:text="탈퇴"></a> </p></td>
+		      </tr>
+		      <div class="hiddenForm">
+		      
+		      </div>
+		        </div>
+		            <div th:if="${list == null}">
+		        	<td style="text-align: center;" colspan="9">회원이 존재하지 않습니다.</td>
+		        </div>
+		    </tbody>
+		  </table>
+		</div>
+	</th:block>
+</body>
+</html>
