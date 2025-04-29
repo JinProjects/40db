@@ -26,11 +26,11 @@
 		  		<tbody>
 					<tr th:each=" dto,state : ${list} " >
 						<td th:text="${dto.bookHopeNo}" ></td>
-						<td th:text="${dto.book_title}"><a sec:authorize="hasRole('ROLE_ADMIN')" href="/hopeBook/hope_admin_detail"></a></td>
+						<td th:text="${dto.book_title}"><a th:href="@{/hopeBook/hopeAdminUpdate}"></a></td>
 						<td th:text="${dto.book_auther}"></td>
 						<td th:text="${dto.book_publisher}"></td>
 						<td th:text="${ #temporals.format(dto.createDate, 'yyyy-MM-dd HH:mm')  }"></td>
-						<td>처리상태</td>
+						<td th:text="${dto.book_hope_stat}"></td>
 					</tr>
 				</tbody>
 

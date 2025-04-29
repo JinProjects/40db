@@ -5,35 +5,64 @@
 <head>
 <meta charset="UTF-8">
 <title>40db wish list</title>
+<script>
+		 function btnHopeAdminUpdate(str){
+			let form=$('<form></form>');
+			let btnWrap = $('.btnWrap');
+			let input = `<input type='hidden' value='${str}' name='hopeStatUpdate' />  `;
+			
+			form.attr("method","GET");
+			form.attr("action","/40db/hopeBook/hopeAdminUpdate")
+			form.append(input);
+			//$('body').append(form);
+			btnWrap.append(form);
+			console.log(str);
+			console.log('클릭')
+			form.submit();
+		}
+</script>
 </head>
 <body>
 <div layout:fragment="content" class="container pt-5">
 	<h2 class="text-center">희망도서 신청 상세</h2>
 	<h4>신청 확인</h4>
+		<!-- <form method="post" th:action="@{/hopeBook/hopeAdminUpdate}"> -->
 			<div class="my-3">
-				<label for="title" class="form-label">제목</label>
-				<p th:text="${param.title}"/>
+				<label for="no" class="form-label">순번</label>
+				<input th:value="${dto.bookHopeNo}" type="text" name="bookHopeNo" id="no" class="form-control" readonly>
 			</div>
 			<div class="my-3">
-				<label for="writer" class="form-label">저자</label>
-				<p th:value="${param.author}"/>
+				<label for="title" class="form-label">제목</label> <input
+					th:value="${dto.book_title}" type="text" name="book_title" id="title" class="form-control" readonly>
 			</div>
 			<div class="my-3">
-				<label for="publisher" class="form-label">출판사</label>
-				<p th:value="${param.publisher}"/>
+				<label for="writer" class="form-label">저자</label> <input
+					th:value="${dto.book_auther}" type="text" name="book_auther" id="writer" class="form-control" readonly>
 			</div>
 			<div class="my-3">
-				<label for="isbn" class="form-label">ISBN</label>
-				<p th:value="${param.isbn13}" />
+				<label for="publisher" class="form-label">출판사</label> <input
+					th:value="${dto.book_publisher}" type="text" name="book_publisher" id="publisher" class="form-control" readonly>
+			</div>
+			<div class="my-3">
+				<label for="isbn" class="form-label">ISBN</label> <input
+					th:value="${dto.book_isbn}" type="text" name="book_isbn" id="isbn" class="form-control" readonly>
+			</div>
+			<div class="my-3">
+				<label for="hopeListDate" class="form-label">신청일자</label> <input
+					th:value="${#temporals.format(dto.createDate, 'yyyy-MM-dd HH:mm')}" type="text" name="createDate" id="createDate" class="form-control" readonly>
 			</div>
 			<div>
 				<label for="opinion">신청사유</label>
-				<p th:value="${param.opinion}"/>
+				<input th:value="${dto.book_reason}" id="opinion" name="book_reason" class="form-control" readonly></input>
 			</div>
-			<div>
-				<button type="reset" class="btn btn-outline-primary">반려(씨알도안먹힌다는뜻. 리스트형식으로 신청도서목록에 남기)</button>
-				<button type="submit" class="btn btn-primary">등록(데이터베이스에 들어가는버튼)</button>
+<!-- 			<div class="my-3" class="btnWrap"> -->
+			<div class="my-3 btnWrap" >
+				<button type="button" onclick="btnHopeAdminUpdate('반려')" class="btn btn-outline-primary">반려(씨알도안먹힌다는뜻. 리스트형식으로 신청도서목록에 남기)</button>
+				<button type="button" onclick="btnHopeAdminUpdate('승인')" class="btn btn-primary">등록(데이터베이스에 들어가는버튼)</button>
 			</div>
+		<!-- </form> -->
+			
+			
 </div>
 </body>
 </html>

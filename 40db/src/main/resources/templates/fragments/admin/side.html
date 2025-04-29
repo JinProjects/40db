@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+layout:decorate="~{fragments/admin/adminLayout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-<div th:fragment="side">
+<div th:fragment="adminSide">
       <h2 class="mx-3">대시보드</h2>
       <ul class="nav nav-pills flex-column">
         <li class="nav-item">

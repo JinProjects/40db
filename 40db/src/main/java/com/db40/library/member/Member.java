@@ -32,16 +32,16 @@ public class Member {
 	@Column(name="member_gender", nullable=false)private char gender;					// 성별
 	
 	// 사용자 실주소
-	@Column(name="address_post", nullable=false)	private String addressPost;	// 우편번호
+	@Column(name="address_post", nullable=false)	private String addressPost;		// 우편번호
 	@Column(name="address_road", nullable=false)	private String addressRoad; 	// 도로명
 	@Column(name="address_jibun", nullable=false)	private String addressJibun;	// 지번
 	@Column(name="address_detail", nullable=false)	private String addressDetail;	// 상세
 	
 	// 자동 입력
-	@Column(name="member_role", nullable=false)private String memberRole = "MEMBER";// 회원구분:멤버
-	@Column(name="member_warning", nullable=false)private Integer memberWarning = 0;										// 회원경고:0
+	@Column(name="member_role", nullable=false)private String memberRole = "MEMBER";					// 회원구분:멤버
+	@Column(name="member_warning", nullable=false)private Integer memberWarning = 0;					// 회원경고:0
 	@Column(name="member_join_date", nullable=false)private LocalDate memberJoinDate = LocalDate.now();	// 생성일
-	@Column(name="member_join_ip", nullable=false)private String joinIp;
+	@Column(name="member_join_ip", nullable=false)private String joinIp;								// 
 	
 	// 계정 상태
 	@ManyToOne @JoinColumn(name="member_status", nullable=false) private MemberStatus memberStatus;

@@ -2,7 +2,7 @@
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-layout:decorate="~{fragments/layout}">
+layout:decorate="~{fragments/admin/adminLayout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -303,7 +303,7 @@ layout:decorate="~{fragments/layout}">
 	</script>
 </head>
 <body>
-	<th:block layout:fragment="content">
+	<th:block layout:fragment="adminContent">
 		<div class="container mt-3">
 		  <h2>도서관리</h2>
 		  <p>The .table-hover class enables a hover state (grey background on mouse over) on table rows:</p>            
