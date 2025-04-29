@@ -3,8 +3,10 @@
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
 </head>
 <body>
 <th:block th:fragment="header">
@@ -20,12 +22,26 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 		      <li class="nav-item">
 		        <a class="nav-link text-dark" href="#">홈으로</a>
 		      </li>
+			     <li class="nav-item" sec:authorize="isAnonymous()">
+				  <a class="nav-link text-dark" th:href="@{/member/login}">로그인</a>
+				</li>
+				<li class="nav-item" sec:authorize="isAnonymous()">
+				  <a class="nav-link text-dark" th:href="@{/member/login}" >회원가입</a>
+				</li>
+					
+				
+				 <li class="nav-item">
+				 <a class="nav-link text-dark memberId d-none hidden" sec:authorize="isAuthenticated()"  sec:authentication="principal.username" id="memberId"></a>
+				 </li>
+				  <li class="nav-item" sec:authorize="isAuthenticated()">
+				    <a class="nav-link text-primary displayName" th:href="@{/member/mypage/main}" id="displayName">MYPAGE</a>
+				  </li>
+				 <li class="nav-item" sec:authorize="isAuthenticated()">
+				    <a class="nav-link text-danger" th:href="@{/member/logout}">로그아웃</a>
+				  </li>
+		        
+		        
 		      <li class="nav-item">
-		        <a class="nav-link text-dark" href="#">로그인</a>
-		      </li>
-		      <li class="nav-item">
-		        <a class="nav-link text-dark disabled" href="#">회원가입</a>
-		      </li><li class="nav-item">
 		        <a class="nav-link text-dark disabled" href="#">대시보드</a>
 		      </li>
 	    </ul>
@@ -42,6 +58,27 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	    <div class="nav-item"><a href="#" class="nav-link text-dark">공지사항</a></div>
 	    <div class="nav-item"><a href="#" class="nav-link text-dark">QnA</a></div>
   	</div>
+  	
+  	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  	<script>
+  	// memberId값으로 displayName 값 가져오기
+  	 $(document).ready(function() {
+         var memberId = $("#memberId").text().trim();
+
+         $.ajax({
+             url: "/getDisplayNameByMemberId",
+             method: "GET",
+             data: { memberId: memberId },
+             success: function(displayName) {
+                 $('#displayName').text(displayName);
+             },
+             error: function() {
+                 console.log("displayName을 가져오는 데 실패했습니다.");
+             }
+         });
+     });
+</script>
 </th:block>
 </body>
 </html>
