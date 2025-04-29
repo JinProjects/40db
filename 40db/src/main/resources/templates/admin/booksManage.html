@@ -338,8 +338,14 @@ layout:decorate="~{fragments/admin/adminLayout}">
 	        </div>
 		    </tbody>
 		  </table>
-			  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+			  <div class="d-grid gap-2 d-md-flex ">
 			  	<!-- <button class="btn btn-info btn-sm" id="openModalBtn" th:text="도서등록"></button> -->
+			  	<form action="/40db/admin/booksSearch" method="post">
+				  	<div class="d-felx">
+					  	<input type="text" name="booksSearch">
+					  	<input type="submit" class="btn btn-info" value="검색">
+				  	</div>
+			  	</form>
 			  	<button class="btn btn-info btn-sm" id="openModalBtn" >도서등록</button>
 			  </div>
 			 <!-- modal -->

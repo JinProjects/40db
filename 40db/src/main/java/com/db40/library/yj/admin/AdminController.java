@@ -43,7 +43,7 @@ public class AdminController {
 	public String test(Model model) {
 		//model.addAttribute("list", bookApi.findBooks("java"));
 
-		return "admin/adminMain";
+		return "redirect:/admin/membersManage";
 	}
 	
 	@GetMapping("/admin/membersManage")
