@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
   layout:decorate="~{fragments/layout}">
 <head>
 <meta charset="UTF-8">
@@ -26,7 +27,12 @@
 		  		<tbody>
 					<tr th:each=" dto,state : ${list} " >
 						<td th:text="${dto.bookHopeNo}" ></td>
-						<td th:text="${dto.book_title}"><a th:href="@{/hopeBook/hopeAdminUpdate}"></a></td>
+						<td >
+							<span sec:authorize="hasRole('ROLE_ADMIN')">
+								<a th:href="@{|/hopeBook/hopeAdminDetail/${dto.bookHopeNo}|}" th:text="${dto.book_title}"></a>
+							</span>
+							<span sec:authorize="!hasRole('ROLE_ADMIN')" th:text="${dto.book_title}"></span>
+						</td>
 						<td th:text="${dto.book_auther}"></td>
 						<td th:text="${dto.book_publisher}"></td>
 						<td th:text="${ #temporals.format(dto.createDate, 'yyyy-MM-dd HH:mm')  }"></td>

@@ -41,11 +41,11 @@ public class BookHope {
 	@Column(updatable = false)
 	private LocalDateTime createDate = LocalDateTime.now();
 	
-	private String bookPriceStandard;
+	private Integer bookPriceStandard;
 	
 	private String bookCategoryName;
 	
-	private String bookAdult;
+	private Boolean bookAdult;
 	
 	
 	//@OneToMany(mappedBy = "bookHope")

@@ -19,7 +19,7 @@
 <div  class="container p-3">
 	<h2>희망도서 신청</h2>
 	<h3>자료검색</h3>
-	<label for="search" class="p-3">보유중인 장서인지 검색해주세요</label>
+	<label for="search" class="p-3">우리 도서관에 있었으면 하는 책을 검색해주세요.</label>
 	<input type="text" name="search" id="search" class="form-control me-2 w-75" placeholder="검색어를 입력해주세요">
 	</div>
   <table class="table table-bordered table-hover container text-center hope_user_search">
@@ -110,6 +110,9 @@
 				$("#publisher").val(bookData[index].publisher);
 				$("#isbn13").val(bookData[index].isbn13);
 				$("#pubDate").val(bookData[index].pubDate);
+				$("#priceStandard").val(bookData[index].priceStandard);
+				$("#categoryName").val(bookData[index].categoryName);
+				$("#adult").val(bookData[index].adult);
 				$("#hope_form").submit();
 				
 			}
