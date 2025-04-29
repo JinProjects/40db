@@ -13,27 +13,14 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 </head>
 <body>
 <th:block th:replace="fragments/header::header"/>
-<<<<<<< HEAD
 	 <div sec:authorize="isAnonymous()">
 	<!-- <div sec:authorize="isAuthenticated()"> -->
 		<th:block layout:fragment="content"/>	
 <!-- 	</div> -->
 	</div>
-	<!-- <div class="row" sec:authorize="isAnonymous()"> -->
-	 <div class="row" sec:authorize="isAuthenticated()">
-		<div class="col-sm-3" sec:authorize="hasRole('ADMIN')">
-=======
-<div sec:authorize="isAnonymous()">
-<!--  <div sec:authorize="isAuthenticated()">  -->
-		<th:block layout:fragment="content"/>	
-<!-- 	</div> -->
-	</div>
+
 <!-- 	<div class="row" sec:authorize="isAnonymous()"> -->
 	 <div class="row" sec:authorize="isAuthenticated()"> 
-		<div class="col-sm-3">
->>>>>>> d2c6b84aa6c5f1dfa6734f44b871af2b22342b85
- 		<th:block th:replace="fragments/admin/side::side"/>
-		</div>
 		<div class="col-sm-8">
 			<th:block layout:fragment="content"/>	
 		</div>
