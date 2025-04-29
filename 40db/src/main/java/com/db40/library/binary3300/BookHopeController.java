@@ -1,6 +1,7 @@
 package com.db40.library.binary3300;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class BookHopeController {
 	private final BookHopeService bookHopeService;
 	@Autowired BookHopeApi bookHopeApi;
+	@Autowired BookHopeRepository bookHopeRepository;
 	
 	
 	// 희망도서 검색 첫페이지
@@ -102,13 +104,16 @@ public class BookHopeController {
 		                       @RequestParam String author, 
 		                       @RequestParam String publisher, 
 		                       @RequestParam String isbn13, 
+		                       @RequestParam String pubDate, 
 		                       Model model) {
 		    model.addAttribute("title", title);
 		    model.addAttribute("author", author);
 		    model.addAttribute("publisher", publisher);
 		    model.addAttribute("isbn13", isbn13);
+		    model.addAttribute("pubDate", pubDate);
 		    return "hopeBook/hope_write"; // 폼 페이지 이름
 		}
+		
 		
 	//3. 글 쓰고 희망도서 신청 
 	@PostMapping("/hopeBook/hope_insert")
@@ -119,7 +124,6 @@ public class BookHopeController {
         if(bookHopeService.saveBookHope(bookHope) != null) {  msg = "희망 도서 신청이 완료되었습니다.";}
 		rttr.addFlashAttribute("msg", msg);
 		return "redirect:/hopeBook/hope_list";  
-
     } 
 	
 	//관리자, 희망도서 디테일 확인 페이지
@@ -132,19 +136,19 @@ public class BookHopeController {
 	// 관리자, 희망도서 반려하기/등록하기 업데이트에서 하나로 될거같음
 	@PostMapping("/hopeBook/hopeAdminUpdate")
     public String hopeAdminUpdate(@RequestParam("bookHopeNo") Long bookHopeNo,
-            					  @RequestParam("status") String status, Model model) {
+            					  @RequestParam("book_hope_stat") String status, Model model) {
 		boolean success = bookHopeService.hopeAdminUpdate(bookHopeNo, status);
-        return "hopeBook/hope_admin_detail";
-    } 
-	
-    @GetMapping("/hopeBook/hopeAdminUpdate")
-    public String showAdminDetailPage(HttpServletRequest request , Model model) {
-    	String hopeStatUpdate =  request.getParameter("hopeStatUpdate");
-    	//String hopeStatUpdate =  (String)request.getAttribute("hopeStatUpdate");
-    	System.out.println("hopeStatUpdate="+ hopeStatUpdate);
-       // model.addAttribute("bookHope", bookHope);
-        return "redirect:/hopeBook/hope_list";
+		return "redirect:/hopeBook/hope_list";
     }
+	
+//    @GetMapping("/hopeBook/hopeAdminUpdate")
+//    public String showAdminDetailPage(HttpServletRequest request , Model model) {
+//    	String hopeStatUpdate =  request.getParameter("hopeStatUpdate");
+//    	//String hopeStatUpdate =  (String)request.getAttribute("hopeStatUpdate");
+//    	System.out.println("hopeStatUpdate="+ hopeStatUpdate);
+//       // model.addAttribute("bookHope", bookHope);
+//        return "redirect:/hopeBook/hope_list";
+//    }
 	
 
 }

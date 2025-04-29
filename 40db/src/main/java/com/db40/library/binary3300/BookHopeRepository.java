@@ -1,7 +1,8 @@
 package com.db40.library.binary3300;
 
 import java.util.List;
- 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,6 +29,8 @@ public interface BookHopeRepository extends JpaRepository<BookHope,Long>{
 	//insert into BookHope b 
 	
 	//BookHope findBybookHopeNo(Long bookHopeNo);
+	Optional<BookHope> findBybookHopeNo(Long bookHopeNo);
+	
 	
 }
  

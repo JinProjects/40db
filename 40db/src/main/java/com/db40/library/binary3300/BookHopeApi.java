@@ -39,6 +39,7 @@ public class BookHopeApi {
 	                buffer.append(line);
 	            }
 	            result = buffer.toString();
+	            //System.out.println("속성: " + result);
 	            br.close();
 	        }
 	        conn.disconnect();

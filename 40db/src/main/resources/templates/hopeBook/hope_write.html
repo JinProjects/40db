@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
   layout:decorate="~{fragments/layout}">
 <head>
 <meta charset="UTF-8">
@@ -33,8 +34,8 @@
 					<textarea id="book_reason" name="book_reason" class="form-control"></textarea>
 				</div>
 				<div class="my-3">
-					<button type="reset" class="btn btn-outline-primary">취소</button>
-					<button type="submit" class="btn btn-primary" >제출하기</button>
+					<button type="reset" class="btn btn-outline-primary" >취소</button>
+					<button type="submit" class="btn btn-primary" sec:authorize="isAuthenticated()">제출하기</button>
 				</div>
 		</form>
 	</div>
