@@ -19,26 +19,23 @@
 				<div class="container bg-secondary d-flex align-items-center" style="max-width: 30%; max-height: 100%;">
 				  <section class="bg-white rounded-circle d-flex justify-content-center align-items-center position-relative" style="width: 100%; height: 90%;">
 				    
-				    <!-- 아바타 이미지-->
-				    <img src="/images/member_avatar.png" alt="아바타"
-				         class="position-absolute"
-				         style="z-index: 1; max-width: 90%; max-height: 80%;">
-				    
-				    <div style="z-index: 2; position: relative; color: gray;">아바타 바꾸기</div>
+				   <!-- 아바타 이미지-->
+				    <img src="/40db/images/member_avatar.png" alt="아바타" class="position-absolute" style="z-index: 1; max-width: 90%; max-height: 80%;">
+				    	
+				    <div class="d-none" style="z-index: 2; position: relative; color: gray;">아바타 바꾸기</div>
 				
 				  </section>
 				</div>
 				
 				<!-- 사용자 별명(displayName) -->
 				<div class="container bg-secondary text-white d-flex flex-column" style="max-width: 60%; max-height: 100%;">
-				  <h1 class="row align-items-end" th:href="@{/member/member}" sec:authorize="isAuthenticated()"
-				      sec:authentication="principal.username" style="font-size: 55px; height: 50%"> </h1>
-				  
-				  <div class="container bg-secondary text-dark d-flex align-items-end" style="height: 40%;">
+						  <h1 class="row align-items-end text-white displayName2" id="displayName2" style="font-size: 55px; height: 50%"></h1>
+						  <span class="badge bg-dark col-6 memberId2" style="font-size: 15px" sec:authorize="isAuthenticated()"  sec:authentication="principal.username" id="memberId2"></span>
+				 <!--  <div class="d-flex container bg-secondary text-dark d-flex align-items-center" style="height: 40%;">
 				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
 				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
 				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  </div>
+				  </div> -->
 				</div>
 			
 			</div>
@@ -48,45 +45,108 @@
 			  <div class="d-flex container bg-light rounded-bottom-3 rounded-top-3 justify-content-end" style="max-width: 100%; height: 99%;">
 				
 				<!-- 메인 -->
-				<div class="bg-white p-4 shadow-lg rounded-3 me-auto" style="width: 74%;">
-					
-					
-					<form method="post" th:action="@{/member/mypage/umobile}">
-					
-						<input type="text" name="memberId2" id="memberId2" class="form-control memberId2" th:value="${#authentication.name}" readonly>
-					
-						<input type="tel" name="mobileNumber" id="mobileNumber" class="form-control mobileNumber" value="원래 번호" readonly>
-						
-						<input type="password" name="memberPass" id="memberPass" class="form-control" placeholder="비밀번호 입력">
-						
-						<input type="tel" name="newMobileNumber" id="newMobileNumber" class="form-control" placeholder="새 번호">
-						
-						<input type="submit" class="btn btn-outline-success" value="변경하기">
-					
-					</form>
-					
-					
+				<div class="bg-white shadow-lg rounded-3 me-auto" style="width: 74%; padding: 50px 32px; font-size: 1.1rem;">
+				    <h2 class="mb-4 text-primary d-flex align-items-center" style="gap: 12px;">
+				        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="currentColor" class="bi bi-phone-fill" viewBox="0 0 16 16">
+						  <path d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm6 11a1 1 0 1 0-2 0 1 1 0 0 0 2 0"/>
+						</svg> 휴대전화번호
+				    </h2>
+				
+				    <form method="post" th:action="@{/member/mypage/umobile}" style="display: flex; flex-direction: column; align-items: center; gap: 24px; padding-top:3rem;">
+				        
+				        <!-- 숨겨진 ID -->
+				        <input type="hidden" name="memberId2" id="memberId2" th:value="${#authentication.name}">
+				
+				        <!-- 기존 휴대폰 번호 표시 (입력 불가능한 정보용) -->
+						<div class="w-75 text-center">
+						    <label class="form-label text-muted">현재 등록된 번호: </label>
+						    <div class="badge bg-light text-dark fs-5 py-2 px-4 mobileNumber" id="mobileNumber" style="border-radius: 12px;">
+						    </div>
+						</div>
+				
+				        <!-- 비밀번호 입력 -->
+				        <div class="form-floating w-75">
+				            <input type="password" name="memberPass" id="memberPass" class="form-control" placeholder="비밀번호 입력">
+				            <label for="memberPass">비밀번호 입력</label>
+				        </div>
+				
+				        <!-- 새 번호 입력 -->
+				        <div class="form-floating w-75">
+				            <input type="tel" name="newMobileNumber" id="newMobileNumber" class="form-control" placeholder="새 번호">
+				            <label for="newMobileNumber">새 휴대전화번호<span style="font-size: 11px; color:gray;"> (-없이 숫자만 입력)</span></label>
+				        </div>
+				
+				        <!-- 버튼 -->
+				        <div class="d-flex justify-content-center w-75 mt-2">
+				            <input type="submit" class="btn btn-primary btn-lg px-5 w-50" id="submit" disabled style="font-size: 16px; padding: 12px;" value="변경하기">
+				        </div>
+				    </form>
 				</div>
+
 					
 				
 				<!-- 내비게이터 -->
-			    <div class="d-flex flex-column align-items-end bg-light" style="height: 100%; width: 25%; gap:20px">
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">도서대출현황</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소지변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명변경</a></div>
-			    </div>
+			   <!-- 내비게이터 -->
+				<div class="d-flex flex-column align-items-end bg-light" style="height: 100%; width: 25%; gap:20px">
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">도서대출현황</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소지변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mb-3" style="width: 100%; margin-top: auto;"><a th:href="@{/member/mypage/deleteAccount}" style="text-decoration: none; color: #f44949;">회원탈퇴</a></div>
+				</div>
 			  
 			  </div>
 			</div>
 
 		</div>
+		<script th:if="${success}" th:inline="javascript"> alert([[${success}]]);</script>
+ 		<script th:if="${fail}" th:inline="javascript"> alert([[${fail}]]);</script>
+				
+		<script>
+		// 휴대전화 번호 체크
+		// 휴대전화 번호 양식 확인
+		$(function() {
+		    $("#newMobileNumber").on("keyup", function() {
+		        let mNum = $(this).val().trim();
+		
+		        // 휴대전화 번호가 비어있으면 바로 종료
+		        if (mNum.length === 0) {
+		            $("#newMobileNumber").removeClass("is-valid is-invalid");
+		            $(".submit").prop("disabled", true);
+		            return; // 비어있으면 바로 종료
+		        }
+		
+		        // 휴대전화 번호 형식 확인 ( 숫자만, 11자리 )
+		        const mNumStyle = /^01[016789]\d{3,4}\d{4}$/;
+		        if (!mNumStyle.test(mNum)) {
+		            $("#newMobileNumber")
+		                .removeClass("is-valid")
+		                .addClass("is-invalid");
+		            $("#submit").prop("disabled", true);
+		        } else {
+		            $("#newMobileNumber")
+		                .removeClass("is-invalid")
+		                .addClass("is-valid");
+		            $("#submit").prop("disabled", false);
+		        }
+		    });
+		});
+		$(function() {
+			$("#newMobileNumber").on("blur", function() {
+		        let mNum = $(this).val().trim();
+		        
+		        if (mNum=="") {
+		        	$("#submit").prop("disabled", true);
+		        	}
+		        });
+		});
+		</script>
 		<script>
 	  	// memberId값으로 mobileNumber 값 가져오기
 	  	 $(document).ready(function() {
-	         var memberId = $("#memberId2").val().trim();
+	         var memberId = $("#memberId2").text().trim();
 
 	         $.ajax({
 	             url: "/40db/getMobileNumberByMemberId",
@@ -95,7 +155,7 @@
 	             success: function(mobileNumber) {
 	                 if (mobileNumber) {
 	                   var formattedNumber = mobileNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
-	                   $('#mobileNumber').val(formattedNumber);
+	                   $('#mobileNumber').text(formattedNumber);
 	                 }
 	               },
 	             error: function() {
@@ -103,10 +163,25 @@
 	             }
 	         });
 	     });
-		
 		</script>
-
-
+		<script>
+	  	// memberId값으로 displayName 값 가져오기
+	  	 $(document).ready(function() {
+	         var memberId2 = $("#memberId2").text().trim();
+	
+	         $.ajax({
+	             url: "/40db/getDisplayNameByMemberId",
+	             method: "GET",
+	             data: { memberId: memberId2 },
+	             success: function(displayName) {
+	                 $('#displayName2').text(displayName);
+	             },
+	             error: function() {
+	                 console.log("displayName을 가져오는 데 실패했습니다.");
+	             }
+	         });
+	     });
+		</script>
 	</div>
 </body>
 </html>

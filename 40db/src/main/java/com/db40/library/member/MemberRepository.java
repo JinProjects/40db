@@ -60,6 +60,10 @@ public interface MemberRepository  extends JpaRepository<Member, Long>{
 	@Query("update Member m set m.displayName=:dN where m.memberId=:mI")
 	void updateDisplayNameInMypage(String mI, String dN);
 	
+	// 이메일 중복 검사
+	@Query("select case when count(m) > 0 then true else false end from Member m where m.email=:email")
+	boolean duplicateEmail(String email);
+	
 }
 
 
