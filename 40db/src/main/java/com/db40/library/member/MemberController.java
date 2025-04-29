@@ -284,9 +284,13 @@ public class MemberController {
 	public String deleteAccount() { return "member/mypage/deleteAccount"; }
 	
 	@PostMapping("member/mypage/deleteAccount")
-	public String deleteAccount(String memberId2, String realName, String memberPass, HttpServletRequest request, HttpServletResponse response) {
+	public String deleteAccount(String memberId2, String chkmemberId, String chkmemberPass, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
 	    Long id = service.findIDByMemberId(memberId2);
-	    service.deleteAccountInMypage(id, realName, memberPass);
+	    int result = service.deleteAccountInMypage(id, chkmemberId, chkmemberPass, redirectAttributes);
+	    
+	    if (result==0) {
+	    	return "redirect:/member/mypage/deleteAccount";
+	    }
 
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    if (authentication != null) {
