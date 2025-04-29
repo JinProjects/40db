@@ -1,44 +1,48 @@
 <!DOCTYPE html>
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-layout:decorate="~{fragments/layout}">
+  layout:decorate="~{fragments/admin/adminLayout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+ 	 <style>
+     /* 캐러셀(이미지슬라이드) 이미지 크기변경 */
+      .carousel-inner{
+        width:300px;
+        height:790px; /* 이미지 높이 변경 */
+      }
+      .carousel-item{
+        width: auto;
+        height:100%;
+      }
+      .d-block {
+        display:block;
+        width: auto;
+        height: 100%;
+      }
+      </style> 
 <body>
-<div layout:fragment="content">
-	<div class="container mt-3">
-  <h2>Hover Rows</h2>
-  <p>The .table-hover class enables a hover state (grey background on mouse over) on table rows:</p>            
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>mary@example.com</td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>july@example.com</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<div layout:fragment="adminContent">
+	<div class="d-flex justify-content-around w-100">
+		<div>
+			<div>
+				<span>대출베스트도서</span>
+				<span>더보기</span>
+			</div>
+			<div>
+				<ul>
+					<li></li>
+				</ul>
+			</div>
+		</div>
+		<hr>
+		<div>
+			<span>이 달의 추천도서</span>
+			<span>더보기</span>
+		</div>
+		<hr>
+	</div>
 </div>
 </body>
 </html>

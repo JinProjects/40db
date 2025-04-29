@@ -2,7 +2,7 @@
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-layout:decorate="~{fragments/layout}">
+layout:decorate="~{fragments/admin/adminLayout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -40,6 +40,9 @@ layout:decorate="~{fragments/layout}">
 			 $('#modalBox').on('hidden.bs.modal', function (e) { 
 				 console.log("hidden.bs.modal"); 
 				 });
+			$('.btnClose').on('click',function(){
+				location.reload();
+			})
 			let searchBtn = document.getElementById('searchBtn');
 			let bookRegBtn = document.getElementById('bookRegBtn');
 			const successModalEl = document.getElementById('successAlertModal');
@@ -180,6 +183,7 @@ layout:decorate="~{fragments/layout}">
 									success:function(response){ */
 										//if(response.status == 'success'){
 											 $('#existBookModal').modal('show');
+											 $('.modal-result').empty();
 											 $('.modal-result').append('이미 등록된 도서입니다. 등록하시겠습니까?');
 											 let btnExistBookReg = document.getElementById('btnExistBookReg');//$('.btnExistBookReg');
 											 btnExistBookReg.addEventListener('click',function(){
@@ -223,6 +227,7 @@ layout:decorate="~{fragments/layout}">
 			                if(response.status == 'success'){
 			                	//alert("modal");
 			                	successModalInstance.show();
+			                	successAlertMessage.empty();
 								 successAlertMessage.append( bookData.bookTitle +' 등록되었습니다.');										
 
 			                    // 1초 후에 모달 숨기기
@@ -303,10 +308,10 @@ layout:decorate="~{fragments/layout}">
 	</script>
 </head>
 <body>
-	<th:block layout:fragment="content">
+	<th:block layout:fragment="adminContent">
 		<div class="container mt-3">
+		<input type="hidden" id="actionData" th:value="${action}">
 		  <h2>도서관리</h2>
-		  <p>The .table-hover class enables a hover state (grey background on mouse over) on table rows:</p>            
 		  <table style="caption-side: top;" class="table table-hover">
 		  <caption>도서리스트</caption>
 		    <thead>
@@ -409,7 +414,7 @@ layout:decorate="~{fragments/layout}">
 						</div>
 					</div>
 			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			        <button type="button" class="btn btn-secondary btnClose" data-bs-dismiss="modal">닫기</button>
 			      </div>
 		      </div>
 		      <!-- The Modal -->
@@ -429,7 +434,7 @@ layout:decorate="~{fragments/layout}">
 				      <!-- Modal footer -->
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-info btnExistBookReg" id="btnExistBookReg">등록</button>
-				        <button type="button" class="btn btn-danger" >취소</button>
+				        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
 				      </div>
 				
 				    </div>

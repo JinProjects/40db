@@ -45,8 +45,8 @@
 			<tbody>
 				<tr th:each="books, loop : ${paging}">
 					<td th:text="${loop.count}"></td>
-					<td><a th:text="${books.bookTitle}"
-						th:href="@{/detail/{bookNo}(bookNo=${books.bookNo})}"></a></td>
+					<td><a th:href="@{|books/detail/${books.bookNo}|}"
+					th:text="${books.bookTitle}"></a></td>
 					<td th:text="${books.bookAuthor}"></td>
 					<td th:text="${books.bookPublisher}"></td>
 					<td th:text="${books.bookPublishedDate}"></td>

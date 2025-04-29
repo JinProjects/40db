@@ -24,7 +24,7 @@ public class RecommandController {
 	private final Recommand recommandService;
 	private final ObjectMapper objectMapper;
 	
-	@GetMapping("/book/recommandations")
+	@GetMapping("/books/recommandations")
 	public String showRecommandations(Model model) {
 		String recommandedBooksJson = recommandService.getRecommnadedBooks();
 		List<RecommandBookInfo> bookList = Collections.emptyList();

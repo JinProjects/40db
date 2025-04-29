@@ -29,6 +29,7 @@ public class BorrowController {
         List<Borrow> allList = borrowRepository.findAll();
         allList.sort(new BorrowComparator());
         model.addAttribute("allList", allList);
+        model.addAttribute("active", "memberBorrowList");
         return "borrow/inout_admin";
     }
 
