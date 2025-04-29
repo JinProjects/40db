@@ -24,8 +24,8 @@
 				  <section class="bg-white rounded-circle d-flex justify-content-center align-items-center position-relative" style="width: 100%; height: 90%;">
 				    
 				    <!-- 아바타 이미지-->
-				    <img src="/40db/images/member_avatar.png" alt="아바타" class="position-absolute" style="z-index: 1; max-width: 90%; max-height: 80%;">
-				    	
+				    <img src="/40db/images/member_avatar.png" alt="아바타" class="position-absolute" style="z-index: 1; max-width: 90%; max-height: 80%; cursor: pointer;">
+				    
 				    <div class="d-none" style="z-index: 2; position: relative; color: gray;">아바타 바꾸기</div>
 				
 				  </section>
@@ -34,7 +34,7 @@
 				<!-- 사용자 별명(displayName) -->
 				<div class="container bg-secondary text-white d-flex flex-column" style="max-width: 60%; max-height: 100%;">
 						  <h1 class="row align-items-end text-white displayName2" id="displayName2" style="font-size: 55px; height: 50%"></h1>
-						  <span class="badge bg-dark col-6 memberId2" style="font-size: 15px" sec:authorize="isAuthenticated()"  sec:authentication="principal.username" id="memberId2"></span>
+						  <span class="badge bg-dark col-5 memberId2" style="font-size: 15px" sec:authorize="isAuthenticated()"  sec:authentication="principal.username" id="memberId2"></span>
 				 <!--  <div class="d-flex container bg-secondary text-dark d-flex align-items-center" style="height: 40%;">
 				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
 				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
@@ -49,26 +49,40 @@
 			  <div class="d-flex container bg-light rounded-bottom-3 rounded-top-3 justify-content-end" style="max-width: 100%; height: 99%;">
 				
 				<!-- 메인 -->
-				<div>
-					도서대출현황
+				<!-- 메인 -->
+				<div class="bg-white p-4 shadow-lg rounded-3 me-auto" style="width: 74%;">
+					
+					
+					<form method="post" th:action="@{/member/mypage/udname}">
+					
+						<input type="text" name="memberId2" id="memberId2" class="form-control memberId2" th:value="${#authentication.name}" readonly>
+					
+						<span>새로 사용할 별명을 입력해주세요</span>
+						
+						<input type="text" name="newdisplayName" id="newdisplayName" class="form-control" placeholder="새 별명">
+						
+						<input type="submit" class="btn btn-outline-success" value="변경하기">
+					
+					</form>
+					
+					
 				</div>
 					
 				
 				<!-- 내비게이터 -->
-				<div class="d-flex flex-column align-items-end bg-light" style="height: 100%; width: 25%; gap:20px">
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">도서대출현황</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소지변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mb-3" style="width: 100%; margin-top: auto;"><a th:href="@{/member/mypage/deleteAccount}" style="text-decoration: none; color: #f44949;">회원탈퇴</a></div>
-				</div>
-
+			    <div class="d-flex flex-column align-items-end bg-light" style="height: 100%; width: 25%; gap:20px">
+			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">도서대출현황</a></div>
+			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호변경</a></div>
+			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일변경</a></div>
+			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소지변경</a></div>
+			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호변경</a></div>
+			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명변경</a></div>
+			    </div>
 			  
 			  </div>
 			</div>
 		</div>
+	<!-- jQuery library -->
   	<script>
   	// memberId값으로 displayName 값 가져오기
   	 $(document).ready(function() {
@@ -86,6 +100,8 @@
              }
          });
      });
+  	
+  	$()
 </script>
 	</div>
 </body>

@@ -49,7 +49,17 @@ public interface MemberRepository  extends JpaRepository<Member, Long>{
 	@Modifying @Transactional
 	@Query("update Member m set m.addressPost=:aP, m.addressRoad=:aR, m.addressJibun=:aJ, m.addressDetail=:aD where m.memberId=:mI")
 	void updateAddressInMypage(String mI, String aP, String aR, String aJ, String aD);
-		
+	
+	// 휴대전화번호
+	@Modifying @Transactional
+	@Query("update Member m set m.mobileNumber=:mN where m.memberId=:mI")
+	void updateMobileNumberInMypage(String mI, String mN);
+	
+	// 별명
+	@Modifying @Transactional
+	@Query("update Member m set m.displayName=:dN where m.memberId=:mI")
+	void updateDisplayNameInMypage(String mI, String dN);
+	
 }
 
 

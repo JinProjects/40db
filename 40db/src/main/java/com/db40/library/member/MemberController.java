@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -67,7 +70,7 @@ public class MemberController {
 			service.insertMember(member);
 		}catch(DataIntegrityViolationException e) { // 무결성- 중복키, 외래키제약, 데이터형식불일치
 			e.printStackTrace();
-			bindingResult.reject("failed" , "정보를 다시 확인해주세요.");
+			bindingResult.reject("failed" , "입력 혹은 선택하지 않은 항목이 존재합니다");
 			return "member/join"; 
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -85,7 +88,6 @@ public class MemberController {
 			if(principal != null) {
 				return "member/mypage/recentBorrow";
 			}
-			System.out.println("로그인실행");
 			model.addAttribute("kakao", kakao.identify());	// 카카오
 			model.addAttribute("naver", naver.identify());	// 네이버
 			model.addAttribute("google", google.identify()); // 구글
@@ -236,6 +238,11 @@ public class MemberController {
 	@GetMapping("/member/mypage/uemail")
 	public String mypageUpdateEmail() { return "member/mypage/updateEmail"; }
 	
+	@PostMapping("/member/mypage/uemail")
+	public String mypageUpdateEmail_post(String memberId, String memberPass, String newemail) {
+		return "a";
+	}
+	
 	@GetMapping("/member/mypage/uaddress")
 	public String mypageUpdateAddress(String memberId, Model model) {
 		return "member/mypage/updateAddress"; }
@@ -246,6 +253,37 @@ public class MemberController {
 		return "member/mypage/updateAddress";
 	}
 	
+	@GetMapping("/member/mypage/umobile")
+	public String mypageUpdateMobile() { return "member/mypage/updateMobileNumber"; }
+	
+	@PostMapping("/member/mypage/umobile")
+	public String mypageUpdateMobile_post(String memberId2, String newMobileNumber) {
+		service.updateMobileNumerInMypage(memberId2, newMobileNumber);
+		return "member/mypage/updateMobileNumber";
+	}
+	
+	@GetMapping("member/mypage/udname")
+	public String mypageUpdatedName() { return "member/mypage/updateDisplayName"; }
+	
+	@PostMapping("member/mypage/udname")
+	public String mypageUpdatdName_post(String memberId2, String newdisplayName) {
+		service.updateDisplayNameInMypage(memberId2, newdisplayName);
+		return "member/mypage/updateDisplayName";
+	}
+	@GetMapping("member/mypage/deleteAccount")
+	public String deleteAccount() { return "member/mypage/deleteAccount"; }
+	
+	@PostMapping("member/mypage/deleteAccount")
+	public String deleteAccount(String memberId2, String realName, String memberPass, HttpServletRequest request, HttpServletResponse response) {
+	    Long id = service.findIDByMemberId(memberId2);
+	    service.deleteAccountInMypage(id, realName, memberPass);
+
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    if (authentication != null) {
+	        new SecurityContextLogoutHandler().logout(request, response, authentication);
+	    }
+	    return "redirect:/member/login";
+	}
 	/* 마이페이지 */
 	
 	
@@ -272,6 +310,10 @@ public class MemberController {
 	    resultEmail.put("resultEmail", exists ? "사용불가" : "사용가능");
 	    return resultEmail;
 	}
+	
+	/* ajax - 데이터 가져오기 */
+	/* ajax - 데이터 가져오기 */
+	
 	// memberid로 displayName 가져오기
 	@GetMapping("/getDisplayNameByMemberId") @ResponseBody
 	public String getDisplayNameByMemberId(@RequestParam String memberId) {
@@ -285,19 +327,21 @@ public class MemberController {
 	// memberid로 address* 가져오기
 	@GetMapping("/getAddressPostByMemberId") @ResponseBody
 	public String getAddressPostByMemberId(@RequestParam String memberId) {
-		return service.selectAddressPostByMemberId(memberId);
-	}
+		return service.selectAddressPostByMemberId(memberId); }
 	@GetMapping("/getAddressRoadByMemberId") @ResponseBody
 	public String getAddressRoadByMemberId(@RequestParam String memberId) {
-		return service.selectAddressRoadByMemberId(memberId);
-	}
+		return service.selectAddressRoadByMemberId(memberId); }
 	@GetMapping("/getAddressJibunByMemberId") @ResponseBody
 	public String getAddressJinunByMemberId(@RequestParam String memberId) {
-		return service.selectAddressJibunByMemberId(memberId);
-	}
+		return service.selectAddressJibunByMemberId(memberId); }
 	@GetMapping("/getAddressDetailByMemberId") @ResponseBody
 	public String getAddressDetailByMemberId(@RequestParam String memberId) {
-		return service.selectAddressDetailByMemberId(memberId);
+		return service.selectAddressDetailByMemberId(memberId); }
+	// mobileNumber 가져오기
+	@GetMapping("/getMobileNumberByMemberId") @ResponseBody
+	public  String getMobileNumberByMemberId(@RequestParam String memberId) {
+		return service.selectMobileNumberByMemberId(memberId);
 	}
+	
 	
 }
