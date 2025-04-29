@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class MemberController {
@@ -229,18 +230,24 @@ public class MemberController {
 	}
 	
 	@PostMapping("/member/mypage/upass")
-	public String mypageUpdatePassword_post(String memberId, String oldpassword, String newpassword) {
+	public String mypageUpdatePassword_post(String memberId, String oldpassword, String newpassword, String newpassword2, RedirectAttributes redirectAttributes) {
+		if (!newpassword.equals(newpassword2)) {
+			redirectAttributes.addFlashAttribute("fail", "새 비밀번호가 일치하지 않습니다");
+			return "redirect:/member/mypage/upass";
+		}
 		Long id = service.selectUserMemberId(memberId).getId();
-		service.updatePasswordInMypage(newpassword, id, oldpassword);
-		return "member/mypage/updatePassword";
+		service.updatePasswordInMypage(newpassword, id, oldpassword, redirectAttributes);
+		return "redirect:/member/mypage/upass";
 	}
 	
 	@GetMapping("/member/mypage/uemail")
 	public String mypageUpdateEmail() { return "member/mypage/updateEmail"; }
 	
 	@PostMapping("/member/mypage/uemail")
-	public String mypageUpdateEmail_post(String memberId, String memberPass, String newemail) {
-		return "a";
+	public String mypageUpdateEmail_post(String memberId, String memberPass, String newemail, RedirectAttributes redirectAttributes) {
+		Long id = service.selectUserMemberId(memberId).getId();
+		service.updateEmailInMypage(id, memberPass, newemail, redirectAttributes);
+		return "redirect:/member/mypage/uemail";
 	}
 	
 	@GetMapping("/member/mypage/uaddress")
@@ -248,27 +255,30 @@ public class MemberController {
 		return "member/mypage/updateAddress"; }
 	
 	@PostMapping("/member/mypage/uaddress")
-	public String mypageUpdateAddress_post(String memberId, String addressPost, String addressRoad, String addressJibun, String addressDetail) {
-		service.updateAddressInMypage(memberId, addressPost, addressRoad, addressJibun, addressDetail);
-		return "member/mypage/updateAddress";
+	public String mypageUpdateAddress_post(String memberId, String addressPost, String addressRoad, String addressJibun, String addressDetail, RedirectAttributes redirectAttributes) {
+		Long id = service.selectUserMemberId(memberId).getId();
+		service.updateAddressInMypage(id, addressPost, addressRoad, addressJibun, addressDetail, redirectAttributes);
+		return "redirect:/member/mypage/uaddress";
 	}
 	
 	@GetMapping("/member/mypage/umobile")
 	public String mypageUpdateMobile() { return "member/mypage/updateMobileNumber"; }
 	
 	@PostMapping("/member/mypage/umobile")
-	public String mypageUpdateMobile_post(String memberId2, String newMobileNumber) {
-		service.updateMobileNumerInMypage(memberId2, newMobileNumber);
-		return "member/mypage/updateMobileNumber";
+	public String mypageUpdateMobile_post(String memberId2, String newMobileNumber, String memberPass, RedirectAttributes redirectAttributes) {
+		Long id = service.selectUserMemberId(memberId2).getId();
+		service.updateMobileNumberInMypage(id, newMobileNumber, memberPass, redirectAttributes);
+		return "redirect:/member/mypage/umobile";
 	}
 	
 	@GetMapping("member/mypage/udname")
 	public String mypageUpdatedName() { return "member/mypage/updateDisplayName"; }
 	
 	@PostMapping("member/mypage/udname")
-	public String mypageUpdatdName_post(String memberId2, String newdisplayName) {
-		service.updateDisplayNameInMypage(memberId2, newdisplayName);
-		return "member/mypage/updateDisplayName";
+	public String mypageUpdatdName_post(String memberId2, String newdisplayName, RedirectAttributes redirectAttributes) {
+		Long id = service.selectUserMemberId(memberId2).getId();
+		service.updateDisplayNameInMypage(id, newdisplayName, redirectAttributes);
+		return "redirect:/member/mypage/udname";
 	}
 	@GetMapping("member/mypage/deleteAccount")
 	public String deleteAccount() { return "member/mypage/deleteAccount"; }
