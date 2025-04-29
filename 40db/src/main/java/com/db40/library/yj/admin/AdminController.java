@@ -55,7 +55,7 @@ public class AdminController {
 			member.setMemberStatus(memberStatus);
 		}
 		
-		
+		model.addAttribute("active", "memberManage");
 		model.addAttribute("list",memberList);
 		return "admin/membersManage";
 	}
@@ -83,6 +83,7 @@ public class AdminController {
 	@GetMapping("/admin/booksManage")
 	public String booksManage(Model model) {
 		List<Books> bookList = booksRepository.findAll();
+		model.addAttribute("active", "booksManage");
 		model.addAttribute("list", bookList);
 		return "admin/booksManage";
 	}

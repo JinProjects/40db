@@ -46,8 +46,8 @@
 					onsubmit="return confirmBorrow();">
 					<input type="hidden" name="bookNo" th:value="${books.bookNo}">
 					<input type="hidden" name="bookTitle" th:value="${books.bookTitle}">
-					<input type="hidden" th:name="${_csrf.parameterName}"
-						th:value="${_csrf.token}" />
+					<!-- <input type="hidden" th:name="${_csrf.parameterName}"
+						th:value="${_csrf.token}" /> -->
 					<button type="submit" class="btn btn-primary">책 빌리기</button>
 				</form>
 			</div>
