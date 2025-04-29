@@ -13,10 +13,6 @@
 		<h4>희망도서 신청</h4>
 		<form method="post" th:action="@{/hopeBook/hope_insert}">
 				<div class="my-3">
-					<label for="no" class="form-label">순번</label> <input
-						 th:value="${no}" type="text" name="bookHopeNo" id="no" class="form-control" readonly>
-				</div>
-				<div class="my-3">
 					<label for="title" class="form-label">제목</label> <input
 						 th:value="${title}" type="text" name="book_title" id="title" class="form-control" readonly>
 				</div>
@@ -32,13 +28,9 @@
 					<label for="isbn" class="form-label">ISBN</label> <input
 						th:value="${isbn13}" type="text" name="book_isbn" id="isbn" class="form-control" readonly>
 				</div>
-				<div class="my-3">
-					<label for="isbn" class="form-label">신청일자</label> <input
-						th:value="${isbn13}" type="text" name="book_isbn" id="isbn" class="form-control" readonly>
-				</div>
 				<div>
-					<label for="opinion">신청사유</label>
-					<textarea id="opinion" name="book_reason" class="form-control" placeholder="자유롭게 기입해주세요"></textarea>
+					<label for="book_reason">신청사유</label>
+					<textarea id="book_reason" name="book_reason" class="form-control"></textarea>
 				</div>
 				<div class="my-3">
 					<button type="reset" class="btn btn-outline-primary">취소</button>

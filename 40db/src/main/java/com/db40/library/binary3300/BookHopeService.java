@@ -14,57 +14,60 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BookHopeService {
-	@Autowired BookHopeRepository bookHopeRepository;
-	
-	//PAGING
-	//PAGING
-	//1: 최신글 10		order by bno desc limit 0,10	0번째부터 10개
-	//2: 최신글 10		order by bno desc limit 10,10	10번째부터 10개
-	public Page<BookHope> getPaging(int page){ //어디서부터  ## 이거 테스트요~
+	@Autowired
+	BookHopeRepository bookHopeRepository;
+
+	// PAGING
+	// PAGING
+	// 1: 최신글 10 order by bno desc limit 0,10 0번째부터 10개
+	// 2: 최신글 10 order by bno desc limit 10,10 10번째부터 10개
+	public Page<BookHope> getPaging(int page) { // 어디서부터 ## 이거 테스트요~
 		List<Sort.Order> sort = new ArrayList<>();
 		sort.add(Sort.Order.desc("bookHopeNo"));
 		Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
-		return bookHopeRepository.findAll(pageable);//역순 안되면 여기와서찾기
+		return bookHopeRepository.findAll(pageable);// 역순 안되면 여기와서찾기
 	}
-	
-	
-	//전체리스트
+
+	// 전체리스트
 	public List<BookHope> findAllByOrderByDesc() {
 		return bookHopeRepository.findAllByOrderByDesc();
 	}
-	
-	//상세보기
+
+	// 상세보기
 	@Transactional
 	public BookHope find(Long id) {
 		BookHope bookhope = bookHopeRepository.findById(id).get();
 		bookHopeRepository.save(bookhope);
 		return bookhope;
 	}
-	
-	//임시 작성하기 
+
+	// 임시 작성하기
 //	public void insert(BookHope bookhope, String member_id) {
 //		Member member = new Member();
 //		member.setMemberId(member_id);
 //		bookhope.setMember(member);
 //		bookHopeRepository.save(bookhope);
 //	}
-	
-	//코파일럿이 일러주는대로
+
+	// 코파일럿이 일러주는대로
 	public BookHopeService(BookHopeRepository bookHopeRepository) {
 		this.bookHopeRepository = bookHopeRepository;
 	}
-	
+
 	@Transactional
 	public BookHope saveBookHope(BookHope bookHope) {
 		bookHope.setBook_hope_stat("NOPE");
 		return bookHopeRepository.save(bookHope);
 	}
-	public List<BookHope> findAll(){
+
+	public List<BookHope> findAll() {
 		return bookHopeRepository.findAll();
 	}
 
+	// 관리자, 책 반려
+//	  public boolean hopeAdminUpdate(Long bookHopeNo, String status) { BookHope
+//	  bookHope = bookHopeRepository.findBybookHopeNo(bookHopeNo);
+//	  }
+	 
 
-	
-	
-	
 }
