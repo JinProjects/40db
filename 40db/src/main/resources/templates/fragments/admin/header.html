@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-
 <meta charset="UTF-8">
-<title>Insert title here</title>
-
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<!-- Latest compiled JavaScript -->
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<th:block th:fragment="header">
+<th:block th:fragment="adminHeader">
 <div>
 	<nav class="navbar navbar-expand-sm bg-white navbar-dark">
 	  <div class="container-fluid">
@@ -48,37 +51,14 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	  </div>
 	</nav>
 </div>
-	  <div class="d-flex justify-content-around bg-light mb-3 p-3" >
+	<div class="d-flex justify-content-around bg-light mb-3 p-3" >
 	 <!--    <div class="nav-item">자료검색</div>
 	    <div class="nav-item">자료검색</div>
 	    <div class="nav-item">자료검색</a></div> -->
-	    <div class="nav-item"><a href="#" class="nav-link text-dark">자료검색</a></div>
-	    <div class="nav-item"><a href="#" class="nav-link text-dark">추천도서</a></div>
-	    <div class="nav-item"><a href="#" class="nav-link text-dark">희망도서</a></div>
-	    <div class="nav-item"><a href="#" class="nav-link text-dark">공지사항</a></div>
-	    <div class="nav-item"><a href="#" class="nav-link text-dark">QnA</a></div>
+	    <div class="nav-item"><a th:href="@{/admin/membersManage}" class="nav-link text-dark">회원관리</a></div>
+	    <div class="nav-item"><a th:href="@{/admin/booksManage}" class="nav-link text-dark">도서관리</a></div>
+	    <div class="nav-item"><a th:href="@{/hopeBook/hope_list}" class="nav-link text-dark">희망도서현황</a></div>
+	    <div class="nav-item"><a th:href="@{/admin/membersManage}" class="nav-link text-dark">반납확인</a></div>
   	</div>
-  	
-  	<!-- jQuery library -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  	<script>
-  	// memberId값으로 displayName 값 가져오기
-  	 $(document).ready(function() {
-         var memberId = $("#memberId").text().trim();
-
-         $.ajax({
-             url: "/getDisplayNameByMemberId",
-             method: "GET",
-             data: { memberId: memberId },
-             success: function(displayName) {
-                 $('#displayName').text(displayName);
-             },
-             error: function() {
-                 console.log("displayName을 가져오는 데 실패했습니다.");
-             }
-         });
-     });
-</script>
-</th:block>
 </body>
 </html>
