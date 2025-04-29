@@ -27,5 +27,7 @@ public interface BookHopeRepository extends JpaRepository<BookHope,Long>{
 	
 	//insert into BookHope b 
 	
+	//BookHope findBybookHopeNo(Long bookHopeNo);
+	
 }
  
