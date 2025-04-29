@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <style>
+<<<<<<< HEAD
 body {
     background-color: #ffe4e1; 
 }
@@ -14,6 +15,15 @@ body {
     padding-right: 10%; 
 }
 
+=======
+
+
+.main-content-area {
+    padding-left: 10%; 
+    padding-right: 10%; 
+}
+
+>>>>>>> 87a16ccc4eec88538b56e2bcb1e8999f728354c6
 
 .search-container {
     margin-bottom: 20px; 
@@ -49,11 +59,13 @@ body {
 <body>
 	<div layout:fragment="content" class="main-content-area"> 
 		<div class="search-container">
-			<form class="d-flex">
-				<input class="form-control me-2" type="search" placeholder="Search"
-					aria-label="Search">
-				<button class="btn btn-outline-success" type="submit">Search</button>
-			</form>
+	    <form th:action="@{/search}" method="get">
+	    <div class="input-group mt-3 mb-3">
+		<input type="text" class="form-control" placeholder="제목 혹은 저자 이름으로 책을 검색하세요"
+			aria-label="Search" name="keyword"  th:value="${param.keyword}">
+		<button class="btn btn-success" type="submit">검색</button>
+		</div>
+		</form>
 		</div>
 		<div class="content-wrapper">
 			<div class="image-area">
@@ -63,6 +75,7 @@ body {
 				</div>
 			</div>
 			<div class="carousel-container">
+<<<<<<< HEAD
 				<img src="images/recommand.png" alt="추천 도서 제목 이미지" style="display: block; margin-bottom: 15px; max-width: 100%; height: auto;">
 				<div id="demo" class="carousel slide" data-bs-ride="carousel">
 					<div class="carousel-inner">
@@ -71,22 +84,35 @@ body {
 							th:classappend="${loopStatus.first ? 'active' : ''}">
 							<img th:src="${book.cover}" class="d-block w-100"
 								th:alt="${book.title + ' 책 표지'}">
+=======
+	<img src="images/recommand.png" alt="추천 도서 제목 이미지" style="display: block; margin-bottom: 15px; max-width: 100%; height: auto;">
+>>>>>>> 87a16ccc4eec88538b56e2bcb1e8999f728354c6
 
-							<div class="carousel-caption d-none d-md-block">
-								<h5 th:text="${book.title}">책 제목</h5>
-								<p th:text="${book.author}">저자</p>
-							</div>
-						</div>
+	<a th:href="@{/books/recommandations}" style="display: block;">
+		<div id="demo" class="carousel slide" data-bs-ride="carousel">
+			<div class="carousel-inner">
+				<div class="carousel-item"
+					th:each="book, loopStatus : ${recommendedBooks}"
+					th:classappend="${loopStatus.first ? 'active' : ''}">
+					<img th:src="${book.cover}" class="d-block w-100"
+						th:alt="${book.title + ' 책 표지'}">
 
-						<div th:if="${#lists.isEmpty(recommendedBooks)}"
-							class="carousel-item active">
-							<div
-								class="d-flex align-items-center justify-content-center h-100">
-								<p class="text-muted">추천 도서가 없습니다.</p>
-							</div>
-						</div>
-
+					<div class="carousel-caption d-none d-md-block">
+						<h5 th:text="${book.title}">책 제목</h5>
+						<p th:text="${book.author}">저자</p>
 					</div>
+				</div>
+
+				<div th:if="${#lists.isEmpty(recommendedBooks)}"
+					class="carousel-item active">
+					<div
+						class="d-flex align-items-center justify-content-center h-100">
+						<p class="text-muted">추천 도서가 없습니다.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</a> </div>
 
 					<button class="carousel-control-prev" type="button"
 						data-bs-target="#demo" data-bs-slide="prev">
@@ -100,5 +126,9 @@ body {
 			</div>
 		</div>
 	</div> 
+<<<<<<< HEAD
+=======
+	
+>>>>>>> 87a16ccc4eec88538b56e2bcb1e8999f728354c6
 </body>
 </html>

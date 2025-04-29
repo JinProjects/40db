@@ -7,6 +7,8 @@ public class RecommandBookInfo {
 	private String description;
 	private String cover;
 	private String publisher;
+	private String link;
+	
 	public String getTitle() {
 		return title;
 	}
@@ -42,6 +44,12 @@ public class RecommandBookInfo {
 	}
 	public void setPublisher(String publisher) {
 		this.publisher = publisher;
+	}
+	public String getLink() {
+		return link;
+	}
+	public void setLink(String link) {
+		this.link = link;
 	}
 	
 	
