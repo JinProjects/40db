@@ -18,7 +18,7 @@ public class SecurityConfig {
 	@Bean SecurityFilterChain  filterChain(HttpSecurity http) throws Exception{
 		// 1-0. http.authorizeHttpRequests().formLogin().logout();
 		// 1-1. 로그인을 안하더라도 모든페이지 접근가능   /admin/**   , /user/**,,,	
-		http.authorizeHttpRequests(
+		http.csrf().disable().authorizeHttpRequests(
 			(authorizeHttpRequests) -> 	authorizeHttpRequests
 											// admin 만 접근가능
 											//.requestMatchers(  new AntPathRequestMatcher("/admin/**"))
