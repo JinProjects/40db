@@ -445,12 +445,12 @@
 								    </thead>
 								    <tbody>
 								    </tbody>
-								    <tfoot>
+								   <!--  <tfoot>
 								    	 <tr> 
 							    			<td colspan="6">
 							    			<div class="d-flex justify-content-between">
 											  <ul class="pagination justify-content-center">   
-												<!--    10  이전(9 - 90) 11(10   - 100) -->
+												   10  이전(9 - 90) 11(10   - 100)
 												<li  class="page-item"    th:if="${  paging.start  >=   paging.bottomlist }">
 													<a class="page-link"    
 														 th:href="@{/admin/booksManage( page= ${  paging.start-2 } )}">  
@@ -458,8 +458,8 @@
 													</a>
 												</li>
 											
-												<!--  paging / current=1, start=1, end=10  -->
-												<!-- 1 2 3 4 5 6 7 8 9 10(9) 다음(10)  -->
+												 paging / current=1, start=1, end=10 
+												1 2 3 4 5 6 7 8 9 10(9) 다음(10) 
 												<li   th:each=" i :  ${  #numbers.sequence(  paging.start, paging.end,1)  }  "
 													  th:classappend=" ${ paging.current == i }  ? active" >
 													<a  th:text="${i}"
@@ -468,7 +468,7 @@
 													></a>
 												</li>	
 											
-											    <!-- 다음 --> 
+											    다음 
 												<li  class="page-item"    th:if="${  paging.pagetotal >   paging.end}">
 													<a class="page-link"    
 														 th:href="@{/admin/booksManage( page= ${  paging.end} )}">
@@ -481,7 +481,7 @@
 									  		</div>
 										  </td>
 									  </tr>	
-								    </tfoot>
+								    </tfoot> -->
 								  </table>
 								 <!-- 책 등록 데이터를 전송하기 위한 숨겨진 폼 -->
 									<form id="hiddenRegisterForm" th:action="@{/admin/insertBook}" method="POST" style="display: none;">
