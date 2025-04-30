@@ -57,7 +57,7 @@ public class BookHopeService {
 
 	@Transactional
 	public BookHope saveBookHope(BookHope bookHope) {
-		bookHope.setBook_hope_stat("NOPE");
+		bookHope.setBook_hope_stat("신청중");
 		return bookHopeRepository.save(bookHope);
 	}
 
@@ -67,7 +67,7 @@ public class BookHopeService {
 
 	// 관리자, 책 반려... 여기서 api가져오기 
 	public boolean hopeAdminUpdate(Long bookHopeNo, String status) {
-		Optional<BookHope> optionalBookHope= bookHopeRepository.findBybookHopeNo(bookHopeNo);
+		Optional<BookHope> optionalBookHope= bookHopeRepository.findById(bookHopeNo);
 		
 		if (optionalBookHope.isPresent()) {
 	        BookHope bookHope = optionalBookHope.get();

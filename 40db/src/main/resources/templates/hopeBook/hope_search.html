@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{fragments/layout}">
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+  layout:decorate="~{fragments/layout}"
+  sec:authorize="isAuthenticated()">
 <head>
 <meta charset="UTF-8">
 <title>40db wish list</title>
@@ -16,15 +18,15 @@
 </head>
 <body>
 <div layout:fragment="content">
-<div  class="container p-3">
+<div  class="container p-5">
 	<h2>희망도서 신청</h2>
 	<h3>자료검색</h3>
 	<label for="search" class="p-3">우리 도서관에 있었으면 하는 책을 검색해주세요.</label>
-	<input type="text" name="search" id="search" class="form-control me-2 w-75" placeholder="검색어를 입력해주세요">
-	</div>
-  <table class="table table-bordered table-hover container text-center hope_user_search">
+	<input type="text" name="search" id="search" class="form-control me-3 w-75  m-2" placeholder="검색어를 입력해주세요">
+	
+  <table class="table table-bordered table-hover container text-center hope_user_search  m-2">
   <caption>40db wish list</caption>
-    <thead>
+    <thead class="table-danger">
       <tr >
         <th>번호</th>
         <th>제목</th>
@@ -43,6 +45,9 @@
   <input type="hidden"  name="publisher" id="publisher">
   <input type="hidden"  name="isbn13" id="isbn13">
   <input type="hidden"  name="pubDate" id="pubDate">
+  <input type="hidden"  name="priceStandard" id="priceStandard">
+  <input type="hidden"  name="categoryName" id="categoryName">
+  <input type="hidden"  name="adult" id="adult">
   </form>
 		<script th:inline="javascript">	
 			let userfind;
@@ -79,6 +84,9 @@
 								let publisher=books[i].publisher;
 								let isbn13=books[i].isbn13;
 								let pubdate=books[i].pubDate;
+								let priceStandard=books[i].priceStandard;
+								let categoryName=books[i].categoryName;
+								let adult=books[i].adult;
 								
 								//2. tbody 행 추가 템플릿 리터럴 <td onClick='ajax_hope_write(${JSON.stringify(books[i])})'>${title}</td>
 								let row = `
@@ -119,6 +127,7 @@
 			
 		</script>
 
+</div>
 </div>
 </body>
 </html>

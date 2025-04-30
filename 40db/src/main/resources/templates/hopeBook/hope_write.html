@@ -13,6 +13,7 @@
 		<h2 class="text-center">희망도서 신청</h2>
 		<h4>희망도서 신청</h4>
 		<form method="post" th:action="@{/hopeBook/hope_insert}">
+		
 				<div class="my-3">
 					<label for="title" class="form-label">제목</label> <input
 						 th:value="${title}" type="text" name="book_title" id="title" class="form-control" readonly>
@@ -26,6 +27,19 @@
 						th:value="${publisher}" type="text" name="book_publisher" id="publisher" class="form-control" readonly>
 				</div>
 				<div class="my-3">
+					<label for="priceStandard" class="form-label">정가</label> <input
+							th:value="${priceStandard}" type="text" name="bookPriceStandard" id="priceStandard" class="form-control" readonly>
+				</div>
+				<div class="my-3">
+					<label for="categoryName" class="form-label">카테고리</label> <input
+							th:value="${categoryName}" type="text" name="bookCategoryName" id="hopeCategory" class="form-control" readonly>
+				</div>
+				<div class="my-3">
+					<label for="adult" class="form-label">성인가</label>
+					<input type="hidden" th:value="${adult}" name="bookAdult" id="adult">
+					<input type="text" class="form-control" readonly th:value="${adult} == true ? '성인가' : '성인가 아님'" >
+				</div>
+				<div class="my-3">
 					<label for="isbn" class="form-label">ISBN</label> <input
 						th:value="${isbn13}" type="text" name="book_isbn" id="isbn" class="form-control" readonly>
 				</div>
@@ -34,8 +48,8 @@
 					<textarea id="book_reason" name="book_reason" class="form-control"></textarea>
 				</div>
 				<div class="my-3">
-					<button type="reset" class="btn btn-outline-primary" >취소</button>
-					<button type="submit" class="btn btn-primary" sec:authorize="isAuthenticated()">제출하기</button>
+					<a th:href="@{/hopeBook/hope_list}" class="btn btn-outline-dark">취소</a>
+					<button type="submit" class="btn btn-light" sec:authorize="isAuthenticated()">제출하기</button>
 				</div>
 		</form>
 	</div>

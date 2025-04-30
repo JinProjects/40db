@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-<<<<<<< HEAD
-  layout:decorate="~{fragments/admin/adminLayout}">
-=======
   xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-  layout:decorate="~{fragments/layout}">
->>>>>>> cabc7a10b9711dc15499c02ebd2093b16be59c8e
+  layout:decorate="${layoutDeco}"> 
 <head>
 <meta charset="UTF-8">
 <title>40db wish list</title>
 </head>
 <body>
-<div layout:fragment="adminContent" class="container pt-5">
-	<div class="container pt-5 p-3">
+<!-- <div layout:fragment="content" class="container pt-5" sec:authorize="hasRole('ROLE_ADMIN')">  sec:authorize="isAnonymous()"-->
+<div layout:fragment="content" class="container pt-5"> 
+<!-- <th:block layout:fragment="adminContent" sec:authorize="hasRole('ROLE_ADMIN')"> -->
+	<div class="container pt-5 p-3 ">
 		<h2 class="text-center">희망도서 신청</h2>
 		<h4>희망도서 신청 현황</h4>
 			<table class="table table-bordered table-hover text-center">
 				<caption>희망도서 신청현황</caption>
-				<thead>
+				<thead class="table-danger">
 					<tr>
 						<th scope="col">번호</th>
 						<th scope="col">제목</th>
@@ -43,7 +41,10 @@
 						<td th:text="${dto.book_hope_stat}"></td>
 					</tr>
 				</tbody>
-
+			</table>
+			<div class="my-3">
+				<p class="text-end"> <a th:href="@{/hopeBook/hope_search}" class="btn btn-light" sec:authorize="isAuthenticated()">신청하기</a> </p>
+			</div>
 				<tfoot>
 					<tr>
 						<!-- # -->
@@ -74,7 +75,7 @@
 						</td>
 					</tr>
 				</tfoot>
-			</table>
+			
 		<script> 
 		    let msg = "[[${msg}]]";   
 		    //오류나면 주석지우기    Thymeleaf 데이터 바이딩- 서버에서 js 코드 전달
