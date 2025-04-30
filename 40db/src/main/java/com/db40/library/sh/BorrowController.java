@@ -30,6 +30,7 @@ public class BorrowController {
         allList.sort(new BorrowComparator());
         model.addAttribute("allList", allList);
         model.addAttribute("active", "memberBorrowList");
+        model.addAttribute("active", "allList");
         return "borrow/inout_admin";
     }
 

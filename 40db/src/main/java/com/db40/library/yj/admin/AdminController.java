@@ -6,6 +6,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +25,16 @@ import com.db40.library.sh.Category;
 import com.db40.library.yj.AdminBooksRepository;
 import com.db40.library.yj.AdminBooksService;
 import com.db40.library.yj.CategoryRepository;
+import com.db40.library.binary3300.*;
 
 @Controller
 public class AdminController {
 	
 	@Autowired
 	AdminRepository adminRepository;
+	@Autowired
+	AdminService adminService;
+	
 	@Autowired
 	MemberStatusRepository memberStatusRepository;
 	@Autowired
@@ -47,16 +54,20 @@ public class AdminController {
 	}
 	
 	@GetMapping("/admin/membersManage")
-	public String membersManage(Model model) {
+	public String membersManage(Model model, @RequestParam( value="page" , defaultValue="0")	int page) {
 		List<Member> memberList = adminRepository.findAll();
 		
+		model.addAttribute("list"   , adminService.memberGetPaging(page));  //10개씩
+		//System.out.println("........" + this.service.findAll().size());
+		model.addAttribute("paging" , new PagingDto(memberList.size() , page)   );  //##전체리스트뽑고
+
 		for(Member member : memberList) {
 			MemberStatus memberStatus = memberStatusRepository.findById(member.getMemberStatus().getId()).get();
 			member.setMemberStatus(memberStatus);
 		}
 		
 		model.addAttribute("active", "memberManage");
-		model.addAttribute("list",memberList);
+		model.addAttribute("memberList",memberList);
 		return "admin/membersManage";
 	}
 	
@@ -81,10 +92,14 @@ public class AdminController {
 	//======bookManage=================================================================
 	
 	@GetMapping("/admin/booksManage")
-	public String booksManage(Model model) {
-		List<Books> bookList = booksRepository.findAll();
+	public String booksManage(Model model, @RequestParam( value="page" , defaultValue="0")	int page) {
+		List<Books> bookList = booksRepository.findAllByOrderByBookNoDesc();
+		model.addAttribute("list"   , adminService.bookGetPaging(page));  //10개씩
+		//System.out.println("........" + this.service.findAll().size());
+		model.addAttribute("paging" , new PagingDto(bookList.size() , page)   );  //##전체리스트뽑고
+
 		model.addAttribute("active", "booksManage");
-		model.addAttribute("list", bookList);
+		model.addAttribute("bookList", bookList);
 		return "admin/booksManage";
 	}
 	@GetMapping("/admin/findBook")
