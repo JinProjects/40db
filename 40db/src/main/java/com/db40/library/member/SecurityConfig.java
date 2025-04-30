@@ -23,7 +23,6 @@ public class SecurityConfig {
 											// admin 만 접근가능
 											//.requestMatchers(  new AntPathRequestMatcher("/admin/**"))
 											//.hasRole("ROLE_ADMIN") 	  // ADMIN 역할
-			
 											// member 만 접근가능
 											.requestMatchers(  new AntPathRequestMatcher("/member/mypage/*"))
 											.hasRole("MEMBER") 	  // MEMBER 역할
@@ -37,7 +36,7 @@ public class SecurityConfig {
 								.loginProcessingUrl("/member/login")
 								.usernameParameter("memberId")
 								.passwordParameter("memberPass")
-								.defaultSuccessUrl("/member/mypage/main")
+								.defaultSuccessUrl("/main")
 		).logout( // 1-3. logout
 			(logout)-> 	 logout
 							.logoutRequestMatcher( new AntPathRequestMatcher("/member/logout"))
