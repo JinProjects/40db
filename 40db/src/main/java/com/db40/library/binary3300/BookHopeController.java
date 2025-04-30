@@ -27,7 +27,7 @@ public class BookHopeController {
 	@Autowired BookHopeRepository bookHopeRepository;
 	
 	
-	// 희망도서 검색 첫페이지
+	// 희망도서 검색
 	@GetMapping("/hopeBook/hope_search")
 	public String hope_now(Model model) {
 		return "/hopeBook/hope_search";
