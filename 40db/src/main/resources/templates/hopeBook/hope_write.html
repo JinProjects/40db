@@ -48,7 +48,7 @@
 					<textarea id="book_reason" name="book_reason" class="form-control"></textarea>
 				</div>
 				<div class="my-3">
-					<button type="reset" class="btn btn-outline-dark" >취소</button>
+					<a th:href="@{/hopeBook/hope_list}" class="btn btn-outline-dark">취소</a>
 					<button type="submit" class="btn btn-light" sec:authorize="isAuthenticated()">제출하기</button>
 				</div>
 		</form>
