@@ -6,7 +6,7 @@
 <!-- ##1 -->
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>마이페이지</title>
 
 </head>
 <body style="background-color:#D9D9D9">
@@ -35,11 +35,6 @@
 				<div class="container bg-secondary text-white d-flex flex-column" style="max-width: 60%; max-height: 100%;">
 						  <h1 class="row align-items-end text-white displayName2" id="displayName2" style="font-size: 55px; height: 50%"></h1>
 						  <span class="badge bg-dark col-5 memberId2" style="font-size: 15px" sec:authorize="isAuthenticated()"  sec:authentication="principal.username" id="memberId2"></span>
-				 <!--  <div class="d-flex container bg-secondary text-dark d-flex align-items-center" style="height: 40%;">
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  </div> -->
 				</div>
 			
 			</div>
@@ -78,12 +73,12 @@
 				
 				<!-- 내비게이터 -->
 				<div class="d-flex flex-column align-items-end bg-light" style="height: 100%; width: 25%; gap:20px">
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">도서대출현황</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소지변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">회원 정보</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호 변경</a></div>
+				    <div class="btn text-dark shadow" style="width: 100%; background-color: #e4e6e9; border-color: #e4e6e9"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명 변경</a></div>
 				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mb-3" style="width: 100%; margin-top: auto;"><a th:href="@{/member/mypage/deleteAccount}" style="text-decoration: none; color: #f44949;">회원탈퇴</a></div>
 				</div>
 			  

@@ -2,6 +2,7 @@ package com.db40.library.member;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -156,27 +157,25 @@ public class MemberService {
 	    memberRepository.save(member);
 	    redirectAttributes.addFlashAttribute("success", "별명이 변경되었습니다");
 	}
-	
-	public void deleteAccountInMypage(Long id, String rN, String mP) {
-		 Optional<Member> find = memberRepository.findById(id);
-		 
-		 if (find.isEmpty()) {
-		        throw new IllegalArgumentException("회원 정보를 찾을 수 없습니다."); }
-		 
-		 Member member = find.get();
-		 
-		 if (!passwordEncoder.matches(mP, member.getMemberPass())) {
-		        throw new IllegalArgumentException("비밀번호 불일치"); 
-		 }
-		 
-		 if (!rN.equals(member.getRealName())) { 
-			 System.out.println("실명 불일치");
-		 }
-		 
-		 memberRepository.deleteById(id);
+	// 회원탈퇴
+	@Transactional
+	public int deleteAccountInMypage(Long id, String memberId, String memberPass, RedirectAttributes redirectAttributes) {
+		Optional<Member> find = memberRepository.findById(id);
+		if (find.isEmpty()) { redirectAttributes.addFlashAttribute("fail", "정상적이지 않은 접근입니다"); return 0; }
+	    Member member = find.get();
+	    System.out.println("find : "+find);
+	    // 아이디 검증
+	    if(!memberId.equals(member.getMemberId())) {
+	    	redirectAttributes.addFlashAttribute("fail", "아이디 또는 비밀번호가 일치하지 않습니다"); return 0; }
+	    // 비밀번호 검증
+	    if(!passwordEncoder.matches(memberPass, member.getMemberPass())) {
+	    	redirectAttributes.addFlashAttribute("fail", "아이디 또는 비밀번호가 일치하지 않습니다"); return 0; }
+	    
+	    memberRepository.delete(member);
+	    redirectAttributes.addFlashAttribute("deleteAccount", "회원탈퇴가 정상 처리되었습니다. 이용해주셔서 감사합니다");
+	    return 1;
 	}
-	
-	
+	/* 마이페이지 */
 	
 	//selectAll
 	public List<Member> selectMemberAll(){  
@@ -217,4 +216,22 @@ public class MemberService {
 	// MobileNumber 가져오기
 	public String selectMobileNumberByMemberId(String memberId) {
 		return memberRepository.findByMemberId(memberId).map(Member::getMobileNumber).orElse(""); }
+	// 실명
+	public String selectRealNameByMemberId(String memberId) {
+		return memberRepository.findByMemberId(memberId).map(Member::getRealName).orElse(""); }
+	// 생년월일
+	public String selectBirthDateByMemberId(String memberId) {
+		LocalDate date =  memberRepository.findByMemberId(memberId).map(Member::getBirthDate).orElseThrow();
+		return date.toString();}
+	// 성별
+	public String selectGenderByMemberId(String memberId) {
+		char gender =  memberRepository.findByMemberId(memberId).map(Member::getGender).orElseThrow();
+		if (gender=='F') { return "여성"; }
+		if (gender=='M') { return "남성"; }
+		return "??";
+	}
+	// 가입일
+	public String selectJoinDateByMemberId(String memberId) {
+		LocalDate date =  memberRepository.findByMemberId(memberId).map(Member::getMemberJoinDate).orElseThrow();
+		return date.toString();}
 }
