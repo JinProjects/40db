@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
-xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-layout:decorate="~{fragments/layout}">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+ 	layout:decorate="~{fragments/admin/adminLayout}">
+<!-- 	th:attr="layout:decorate=~{${layoutDeco}}"> -->
+	<!-- layout:decorate="~{fragments/admin/adminLayout}"> --> 
+<!-- layout:decorate="~{fragments/admin/adminLayout}" -->
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -40,6 +43,9 @@ layout:decorate="~{fragments/layout}">
 			 $('#modalBox').on('hidden.bs.modal', function (e) { 
 				 console.log("hidden.bs.modal"); 
 				 });
+			$('.btnClose').on('click',function(){
+				location.reload();
+			})
 			let searchBtn = document.getElementById('searchBtn');
 			let bookRegBtn = document.getElementById('bookRegBtn');
 			const successModalEl = document.getElementById('successAlertModal');
@@ -180,6 +186,7 @@ layout:decorate="~{fragments/layout}">
 									success:function(response){ */
 										//if(response.status == 'success'){
 											 $('#existBookModal').modal('show');
+											 $('.modal-result').empty();
 											 $('.modal-result').append('이미 등록된 도서입니다. 등록하시겠습니까?');
 											 let btnExistBookReg = document.getElementById('btnExistBookReg');//$('.btnExistBookReg');
 											 btnExistBookReg.addEventListener('click',function(){
@@ -223,6 +230,7 @@ layout:decorate="~{fragments/layout}">
 			                if(response.status == 'success'){
 			                	//alert("modal");
 			                	successModalInstance.show();
+			                	successAlertMessage.empty();
 								 successAlertMessage.append( bookData.bookTitle +' 등록되었습니다.');										
 
 			                    // 1초 후에 모달 숨기기
@@ -303,26 +311,30 @@ layout:decorate="~{fragments/layout}">
 	</script>
 </head>
 <body>
-	<th:block layout:fragment="content">
+	<!-- <th:block layout:fragment="content" sec:authorize="isAnonymous()"> -->
+	<th:block layout:fragment="content" sec:authorize="hasRole('ROLE_ADMIN')">
 		<div class="container mt-3">
+		<input type="hidden" id="actionData" th:value="${action}">
 		  <h2>도서관리</h2>
-		  <p>The .table-hover class enables a hover state (grey background on mouse over) on table rows:</p>            
 		  <table style="caption-side: top;" class="table table-hover">
 		  <caption>도서리스트</caption>
 		    <thead>
 		      <tr class="table-secondary">
 		        <th>번호</th>
 		        <th>도서명</th>
+		        <th>저자</th>
 		        <th>isbn</th>
 		        <th>입고일</th>
-		        <th>삭제</th>
+		        <th style="width: 10%">삭제</th>
 		      </tr>
 		    </thead>
 		    <tbody>
 		   	<div th:if="${list != null}">
 		      <tr th:each="dto, status : ${list}">
-		        <td th:text="${dto.bookNo}"></td>
+		        <td  th:text="${list.getTotalElements - ( list.number*list.size )- status.index}" ></td>
+		        <!-- <td th:text="${dto.bookNo}"></td> -->
 		        <td th:text="${dto.bookTitle}"></td>
+		        <td th:text="${dto.bookAuthor}"></td>
 		        <td th:text="${dto.bookIsbn}"></td>
 		        <td th:text="${#temporals.format(dto.bookEnteredDate,'yyyy-MM-dd')}"></td>
 		        <td><p><a class="btn btn-warning btn-sm" th:href="@{|/books/bookDelete/${dto.bookNo}|}" th:text="삭제"></a> </p></td>
@@ -332,11 +344,66 @@ layout:decorate="~{fragments/layout}">
 	        	<td style="text-align: center;" colspan="5">등록 된 도서가 존재하지 않습니다.</td>
 	        </div>
 		    </tbody>
-		  </table>
-			  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+		    <tfoot>
+				  <tr> 
+		    			<td colspan="6">
+		    			<div class="d-flex justify-content-between">
+		    				<form action="/40db/admin/booksSearch" method="post" class="me-2">
+						  		<div class="d-flex">
+								  	<input type="text" class="me-2" name="booksSearch">
+								  	<input type="submit" class="btn btn-info btn-sm" value="검색">
+						  		</div>
+					  		</form>
+						  <ul class="pagination justify-content-center">   
+							<!--    10  이전(9 - 90) 11(10   - 100) -->
+							<li  class="page-item"    th:if="${  paging.start  >=   paging.bottomlist }">
+								<a class="page-link"    
+									 th:href="@{/admin/booksManage( page= ${  paging.start-2 } )}">  
+									<span>이전</span>
+								</a>
+							</li>
+						
+							<!--  paging / current=1, start=1, end=10  -->
+							<!-- 1 2 3 4 5 6 7 8 9 10(9) 다음(10)  -->
+							<li   th:each=" i :  ${  #numbers.sequence(  paging.start, paging.end,1)  }  "
+								  th:classappend=" ${ paging.current == i }  ? active" >
+								<a  th:text="${i}"
+								    class="page-link"
+								    th:href="@{/admin/booksManage(page=${i-1})}"
+								></a>
+							</li>	
+						
+						    <!-- 다음 --> 
+							<li  class="page-item"    th:if="${  paging.pagetotal >   paging.end}">
+								<a class="page-link"    
+									 th:href="@{/admin/booksManage( page= ${  paging.end} )}">
+									<span>다음</span>
+								</a>
+							</li>
+						    
+						    </ul>
+						    <div>
+					  			<button class="btn btn-info btn-sm" id="openModalBtn" >도서등록</button>
+						    </div>
+				  		</div>
+					  </td>
+				  </tr>	
+				  <div class="d-grid gap-2 d-md-flex ">
 			  	<!-- <button class="btn btn-info btn-sm" id="openModalBtn" th:text="도서등록"></button> -->
-			  	<button class="btn btn-info btn-sm" id="openModalBtn" >도서등록</button>
+				  <!-- 	<div class="d-flex justify-content-between w-100 align-items-center">
+					  	<form action="/40db/admin/booksSearch" method="post" class="me-2">
+					  		<div class="flex-fill">
+							  	<input type="text" name="booksSearch">
+							  	<input type="submit" class="btn btn-info" value="검색">
+					  		</div>
+					  	</form>
+					  		<div>
+							  	<button class="btn btn-info " id="openModalBtn" >도서등록</button>
+					  		</div>
+				  	</div> -->
 			  </div>
+				</tfoot>
+		  </table>
 			 <!-- modal -->
 		  <div class="modal fade" id="modalBox" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		  <div class="modal-dialog modal-xl" role="document">
@@ -378,6 +445,43 @@ layout:decorate="~{fragments/layout}">
 								    </thead>
 								    <tbody>
 								    </tbody>
+								   <!--  <tfoot>
+								    	 <tr> 
+							    			<td colspan="6">
+							    			<div class="d-flex justify-content-between">
+											  <ul class="pagination justify-content-center">   
+												   10  이전(9 - 90) 11(10   - 100)
+												<li  class="page-item"    th:if="${  paging.start  >=   paging.bottomlist }">
+													<a class="page-link"    
+														 th:href="@{/admin/booksManage( page= ${  paging.start-2 } )}">  
+														<span>이전</span>
+													</a>
+												</li>
+											
+												 paging / current=1, start=1, end=10 
+												1 2 3 4 5 6 7 8 9 10(9) 다음(10) 
+												<li   th:each=" i :  ${  #numbers.sequence(  paging.start, paging.end,1)  }  "
+													  th:classappend=" ${ paging.current == i }  ? active" >
+													<a  th:text="${i}"
+													    class="page-link"
+													    th:href="@{/admin/booksManage(page=${i-1})}"
+													></a>
+												</li>	
+											
+											    다음 
+												<li  class="page-item"    th:if="${  paging.pagetotal >   paging.end}">
+													<a class="page-link"    
+														 th:href="@{/admin/booksManage( page= ${  paging.end} )}">
+														<span>다음</span>
+													</a>
+												</li>
+											    
+											    </ul>
+											    
+									  		</div>
+										  </td>
+									  </tr>	
+								    </tfoot> -->
 								  </table>
 								 <!-- 책 등록 데이터를 전송하기 위한 숨겨진 폼 -->
 									<form id="hiddenRegisterForm" th:action="@{/admin/insertBook}" method="POST" style="display: none;">
@@ -409,7 +513,7 @@ layout:decorate="~{fragments/layout}">
 						</div>
 					</div>
 			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			        <button type="button" class="btn btn-secondary btnClose" data-bs-dismiss="modal">닫기</button>
 			      </div>
 		      </div>
 		      <!-- The Modal -->
@@ -429,7 +533,7 @@ layout:decorate="~{fragments/layout}">
 				      <!-- Modal footer -->
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-info btnExistBookReg" id="btnExistBookReg">등록</button>
-				        <button type="button" class="btn btn-danger" >취소</button>
+				        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
 				      </div>
 				
 				    </div>

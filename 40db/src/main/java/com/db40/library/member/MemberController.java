@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.db40.library.sh.Borrow;
+
 @Controller
 public class MemberController {
 	
@@ -295,6 +297,10 @@ public class MemberController {
 		service.updateDisplayNameInMypage(id, newdisplayName, redirectAttributes);
 		return "redirect:/member/mypage/udname";
 	}
+	// 대출목록
+	@GetMapping("member/mypage/borrowList")
+	public String borrowList() { return "member/mypage/borrowList"; }
+	
 	@GetMapping("member/mypage/deleteAccount")
 	public String deleteAccount() { return "member/mypage/deleteAccount"; }
 	

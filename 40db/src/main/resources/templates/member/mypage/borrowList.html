@@ -45,44 +45,29 @@
 				
 				<!-- 메인 -->
 			<div class="bg-white shadow-lg rounded-3 me-auto" style="width: 74%; padding: 50px 32px; font-size: 1.1rem;">  
-			    <h1 class="mb-4 text-primary"><svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-				  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-				  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-				</svg> 회원 정보</h1>  
-			    <form method="post" th:action="@{/member/mypage/uemail}" class="d-flex" style="display: flex; padding-top:3rem; flex-direction: column; align-items: center; gap: 20px;">
+			    <h1 class="mb-4 text-primary"><svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor" class="bi bi-book-half" viewBox="0 0 16 16">
+					  <path d="M8.5 2.687c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+					</svg> 나의 대출목록</h1>  
 			
 			        <!-- 숨겨진 memberId 필드 -->
 			        <div class="form-floating mb-3 w-75 d-none">
 			            <input type="text" name="memberId" id="memberId" class="form-control" th:value="${#authentication.name}" readonly>
 			            <label for="memberId"></label>
 			        </div>
+			        
+ <table class="table table-bordered table-hover text-center">
+  <thead class="table-light">
+    <tr>
+      <th class="col-5">책 제목</th>
+      <th class="col-3">대여일</th>
+      <th class="col-3">반납예정일</th>
+      <th class="col-1">상태</th>
+    </tr>
+  </thead>
+  <tbody id="borrow-table-body">
+  </tbody>
+</table>
 			
-			        <!-- 실명 -->
-			        <div class="mb-3 w-75 text-center">
-			            <label for="realName" class="form-label">실명:</label>
-			            <div class="badge bg-light text-dark fs-5 py-2 px-4" id="realName" style="border-radius: 20px;"></div>
-			        </div>
-			
-			        <!-- 생년월일 -->
-			        <div class="mb-3 w-75 text-center">
-			            <label for="birthDate" class="form-label">생년월일:</label>
-			            <div class="badge bg-light text-dark fs-5 py-2 px-4" id="birthDate" style="border-radius: 20px;"></div>
-			        </div>
-			
-			        <!-- 성별 -->
-			        <div class="mb-3 w-75 text-center">
-			            <label for="gender" class="form-label">성별:</label>
-			            <div class="badge bg-light text-dark fs-5 py-2 px-4" id="gender" style="border-radius: 20px;"></div>
-			        </div>
-			
-			        <!-- 생성일 -->
-			        <div class="mb-3 w-75 text-center">
-			            <label for="joinDate" class="form-label">회원가입일:</label>
-			            <div class="badge bg-light text-dark fs-5 py-2 px-4" id="joinDate" style="border-radius: 20px;"></div>
-			        </div>
-			
-			
-			    </form>
 			</div>
 
 				<!-- 내비게이터 -->
@@ -93,7 +78,6 @@
 				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소 변경</a></div>
 				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호 변경</a></div>
 				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명 변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/borrowList}" style="text-decoration: none; color:black;">대출 목록</a></div>
 				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mb-3" style="width: 100%; margin-top: auto;"><a th:href="@{/member/mypage/deleteAccount}" style="text-decoration: none; color: #f44949;">회원탈퇴</a></div>
 				</div>
 
@@ -101,74 +85,40 @@
 			  </div>
 			</div>
 		</div>
-  	<script>
-  	// memberId값으로 displayName 값 가져오기
-  	 $(document).ready(function() {
-         var memberId2 = $("#memberId2").text().trim();
+		
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("/40db/getBorrowListInMypage")
+        .then(res => {
+            if (!res.ok) throw new Error("데이터를 불러오지 못했습니다");
+            return res.json();
+        })
+         console.log("받아온 데이터:", data);
+        .then(data => renderBorrowTable(data))
+        .catch(err => alert(err.message));
+});
 
-         $.ajax({
-             url: "/40db/getDisplayNameByMemberId",
-             method: "GET",
-             data: { memberId: memberId2 },
-             success: function(displayName) {
-                 $('#displayName2').text(displayName);
-             },
-             error: function() {
-                 console.log("displayName을 가져오는 데 실패했습니다.");
-             }
-         });
-         
-         $.ajax({
-             url: "/40db/getRealNameByMemberId",
-             method: "GET",
-             data: { memberId: memberId2 },
-             success: function(realName) {
-                 $('#realName').text(realName);
-             },
-             error: function() {
-                 console.log("realName을 가져오는 데 실패했습니다.");
-             }
-         });
-         
-         $.ajax({
-             url: "/40db/getBirthDateByMemberId",
-             method: "GET",
-             data: { memberId: memberId2 },
-             success: function(birthDate) {
-                 $('#birthDate').text(birthDate);
-             },
-             error: function() {
-                 console.log("birthDate을 가져오는 데 실패했습니다.");
-             }
-         });
-         
-         $.ajax({
-             url: "/40db/getGenderByMemberId",
-             method: "GET",
-             data: { memberId: memberId2 },
-             success: function(gender) {
-                 $('#gender').text(gender);
-             },
-             error: function() {
-                 console.log("gender를 가져오는 데 실패했습니다.");
-             }
-         });
-         
-         $.ajax({
-             url: "/40db/getJoinDateByMemberId",
-             method: "GET",
-             data: { memberId: memberId2 },
-             success: function(joinDate) {
-                 $('#joinDate').text(joinDate);
-             },
-             error: function() {
-                 console.log("joinDate를 가져오는 데 실패했습니다.");
-             }
-         });
-     });
-  	
-  	
+function renderBorrowTable(rentals) {
+    const tbody = document.getElementById("borrow-table-body");
+    tbody.innerHTML = "";
+
+    rentals.forEach(rental => {
+        const row = `
+            <tr>
+                <td>${rental.bookTitle}</td>
+                <td>${rental.rentDate}</td>
+                <td>${rental.returnDueDate}</td>
+                <td>${rental.status}</td>
+            </tr>
+        `;
+        tbody.insertAdjacentHTML("beforeend", row);
+    });
+}
 </script>
+
+		
+		
+		
 	</div>
 </body>
 </html>

@@ -1,39 +1,50 @@
 <!DOCTYPE html>
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{fragments/layout}">
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+  layout:decorate="${layoutDeco}"> 
 <head>
 <meta charset="UTF-8">
 <title>40db wish list</title>
 </head>
 <body>
-<div layout:fragment="content" class="container pt-5">
-	<div class="container pt-5 p-3">
+<!-- <div layout:fragment="content" class="container pt-5" sec:authorize="hasRole('ROLE_ADMIN')">  sec:authorize="isAnonymous()"-->
+<div layout:fragment="content" class="container pt-5"> 
+<!-- <th:block layout:fragment="adminContent" sec:authorize="hasRole('ROLE_ADMIN')"> -->
+	<div class="container pt-5 p-3 ">
 		<h2 class="text-center">희망도서 신청</h2>
 		<h4>희망도서 신청 현황</h4>
 			<table class="table table-bordered table-hover text-center">
 				<caption>희망도서 신청현황</caption>
-				<thead>
+				<thead class="table-secondary">
 					<tr>
-						<th scope="col">번호</th>
-						<th scope="col">제목</th>
-						<th scope="col">저자</th>
-						<th scope="col">출판사</th>
-						<th scope="col">등록일</th>
-						<th scope="col">처리상태</th>
+						<th scope="col" class="col-1">번호</th>
+						<th scope="col" class="col-4">제목</th>
+						<th scope="col" class="col-3">저자</th>
+						<th scope="col" class="col-1">출판사</th>
+						<th scope="col" class="col-2">등록일</th>
+						<th scope="col" class="col-1">처리상태</th>
 					</tr>
 				</thead>
 		  		<tbody>
 					<tr th:each=" dto,state : ${list} " >
 						<td th:text="${dto.bookHopeNo}" ></td>
-						<td th:text="${dto.book_title}"><a sec:authorize="hasRole('ROLE_ADMIN')" href="/hopeBook/hope_admin_detail"></a></td>
+						<td >
+							<span sec:authorize="hasRole('ROLE_ADMIN')">
+								<a th:href="@{|/hopeBook/hopeAdminDetail/${dto.bookHopeNo}|}" th:text="${dto.book_title}"></a>
+							</span>
+							<span sec:authorize="!hasRole('ROLE_ADMIN')" th:text="${dto.book_title}"></span>
+						</td>
 						<td th:text="${dto.book_auther}"></td>
 						<td th:text="${dto.book_publisher}"></td>
 						<td th:text="${ #temporals.format(dto.createDate, 'yyyy-MM-dd HH:mm')  }"></td>
-						<td>처리상태</td>
+						<td th:text="${dto.book_hope_stat}"></td>
 					</tr>
 				</tbody>
-
+			</table>
+			<div class="my-3">
+				<p class="text-end"> <a th:href="@{/hopeBook/hope_search}" class="btn btn-light" sec:authorize="isAuthenticated()">신청하기</a> </p>
+			</div>
 				<tfoot>
 					<tr>
 						<!-- # -->
@@ -64,7 +75,7 @@
 						</td>
 					</tr>
 				</tfoot>
-			</table>
+			
 		<script> 
 		    let msg = "[[${msg}]]";   
 		    //오류나면 주석지우기    Thymeleaf 데이터 바이딩- 서버에서 js 코드 전달

@@ -2,7 +2,7 @@
 <html lang="ko"   xmlns:th="http://www.thymeleaf.org" 
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-layout:decorate="~{fragments/layout}">
+layout:decorate="~{fragments/admin/adminLayout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -103,11 +103,11 @@ layout:decorate="~{fragments/layout}">
 	<th:block layout:fragment="content">
 		<div class="container mt-3">
 		  <h2>회원관리</h2>
-		  <p>The .table-hover class enables a hover state (grey background on mouse over) on table rows:</p>            
 		  <table style="caption-side: top" class="table table-hover member-result">
 		  <caption>회원리스트</caption>
 		    <thead>
 		      <tr class="table-secondary">
+		        <th>번호</th>
 		        <th>회원아이디</th>
 		        <th>이메일</th>
 		        <th>휴대폰번호</th>
@@ -117,12 +117,13 @@ layout:decorate="~{fragments/layout}">
 		        <th>가입일</th>
 		        <th>IP</th>
 		        <th>수정</th>
-		        <th>탈퇴</th>
+		        <th style="width: 8%">탈퇴</th>
 		      </tr>
 		    </thead>
 		    <tbody>
 		    	<div th:if="${list != null}">
 		      <tr th:each="dto, status : ${list}">
+		      	<td  th:text="${list.getTotalElements - ( list.number*list.size )- status.index}" ></td>
 		        <td th:text="${dto.memberId}"></td>
 		        <td th:text="${dto.email}"></td>
 		        <td th:text="${dto.mobileNumber}"></td>
@@ -145,6 +146,45 @@ layout:decorate="~{fragments/layout}">
 		        	<td style="text-align: center;" colspan="9">회원이 존재하지 않습니다.</td>
 		        </div>
 		    </tbody>
+		    <tfoot>
+				  <tr> 
+					  <td colspan="10">
+					  <div>
+		    				<form action="/40db/admin/membersSearch" method="post" class="me-2">
+						  		<div class="d-flex">
+								  	<input type="text" class="me-2" name="membersSearch">
+								  	<input type="submit" class="btn btn-info btn-sm" value="검색">
+						  		</div>
+					  		</form>
+						  <ul class="pagination  justify-content-center">   
+							<!--    10  이전(9 - 90) 11(10   - 100) -->
+							<li  class="page-item"    th:if="${  paging.start  >=   paging.bottomlist }">
+								<a class="page-link"    
+									 th:href="@{/admin/membersManage( page= ${  paging.start-2 } )}">  
+									<span>이전</span>
+								</a>
+							</li>
+							<!--  paging / current=1, start=1, end=10  -->
+							<!-- 1 2 3 4 5 6 7 8 9 10(9) 다음(10)  -->
+							<li   th:each=" i :  ${  #numbers.sequence(  paging.start, paging.end,1)  }  "
+								  th:classappend=" ${ paging.current == i }  ? active" >
+								<a  th:text="${i}"
+								    class="page-link"
+								    th:href="@{/admin/membersManage(page=${i-1})}"
+								></a>
+							</li>	
+						    <!-- 다음 --> 
+							<li  class="page-item"    th:if="${  paging.pagetotal >   paging.end}">
+								<a class="page-link"    
+									 th:href="@{/admin/membersManage( page= ${  paging.end} )}">
+									<span>다음</span>
+								</a>
+							</li>
+						    </ul>
+						    </div>
+					  </td>
+				  </tr>	
+				</tfoot>
 		  </table>
 		</div>
 	</th:block>
