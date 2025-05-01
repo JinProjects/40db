@@ -46,6 +46,7 @@ public class BookHope {
 	private String bookCategoryName;
 	
 	private Boolean bookAdult;
+	private String book_cover;
 	
 	
 	//@OneToMany(mappedBy = "bookHope")

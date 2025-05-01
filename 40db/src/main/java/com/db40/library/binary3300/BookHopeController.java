@@ -13,9 +13,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.db40.library.sh.Books;
+import com.db40.library.sh.BooksRepository;
+import com.db40.library.sh.Category;
+import com.db40.library.yj.AdminBooksRepository;
+import com.db40.library.yj.CategoryRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +32,9 @@ public class BookHopeController {
 	private final BookHopeService bookHopeService;
 	@Autowired BookHopeApi bookHopeApi;
 	@Autowired BookHopeRepository bookHopeRepository;
+	@Autowired BooksRepository booksRepository;
+	@Autowired AdminBooksRepository adminBooksRepository;
+	@Autowired CategoryRepository categoryRepository;
 	
 	
 	// 희망도서 검색
@@ -89,14 +99,6 @@ public class BookHopeController {
 		model.addAttribute("paging",new PagingDto(bookHopeService.findAll().size(),page)); 
 		
 
-//	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//	      UserDetails userDetails = (UserDetails)authentication.getPrincipal();
-//	      String name = userDetails.getUsername();
-//	      if(name.equals("admin")) {
-//	          model.addAttribute("layoutDeco", "fragments/admin/adminLayout");
-//	       }else {
-//	          model.addAttribute("layoutDeco", "fragments/layout");
-//	       }
 		String name = "";
 		String layout = "fragments/layout";
 	      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -149,7 +151,9 @@ public class BookHopeController {
 		                       @RequestParam String priceStandard, 
 		                       @RequestParam String categoryName, 
 		                       @RequestParam boolean adult, 
+		                       @RequestParam String book_cover, 
 		                       Model model) {
+			System.out.println("여기를봐라: " + book_cover);
 		    model.addAttribute("title", title);
 		    model.addAttribute("author", author);
 		    model.addAttribute("publisher", publisher);
@@ -158,6 +162,7 @@ public class BookHopeController {
 		    model.addAttribute("priceStandard", priceStandard);
 		    model.addAttribute("categoryName", categoryName);
 		    model.addAttribute("adult", adult);
+		    model.addAttribute("book_cover", book_cover);
 		    
 		    return "hopeBook/hope_write"; // 폼 페이지 이름
 		}
@@ -184,9 +189,29 @@ public class BookHopeController {
 	// 관리자, 희망도서 반려하기/등록하기 업데이트에서 하나로 될거같음
 	@PostMapping("/hopeBook/hopeAdminUpdate")
     public String hopeAdminUpdate(@RequestParam("bookHopeNo") Long bookHopeNo,
-            					  @RequestParam("book_hope_stat") String status) {
+            					  @RequestParam("book_hope_stat") String status, BookHope bookHope) {
+		//System.out.println("bookHope.toString()="+bookHope.toString()); 1. 넘어온 데이터 확인
 		bookHopeService.hopeAdminUpdate(bookHopeNo, status);
-		
+		//.save(bookHope);
+		//2. 넘어온 데이터를 도서관 책 데이터에 삽입해주는 서비스 호출 
+		Books books = new Books();
+		String bookCategoryName = bookHope.getBookCategoryName();
+		System.out.println("bookCategoryName: "+ bookCategoryName);
+		books.setBookTitle(bookHope.getBook_title());
+		books.setBookAuthor(bookHope.getBook_auther());
+		books.setBookPublisher(bookHope.getBook_publisher());
+		books.setBookCover(bookHope.getBook_cover());
+		//1. hopeBook의 categoryname을 가지고 카테고리 객체를 가지고 옴  
+			Category category = categoryRepository.findByBookCategoryName(bookCategoryName).orElseThrow(()->new RuntimeException("카테고리를 찾을 수 없습니다."+books.getCategory().getBookCategoryName()));
+		books.setCategory(category);
+		System.out.println("category.getBookCategoryName():"+category.getBookCategoryName());
+		//ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ
+		books.setBookIsbn(bookHope.getBook_isbn());
+		adminBooksRepository.save(books);
+		//  1 테이블 확인
+		//  2 레파지토리 //
+		//  3 서비스 
+		//booksRepository.save(bookHope);
 		return "redirect:/hopeBook/hope_list";
     }
 	

@@ -48,6 +48,7 @@
   <input type="hidden"  name="priceStandard" id="priceStandard">
   <input type="hidden"  name="categoryName" id="categoryName">
   <input type="hidden"  name="adult" id="adult">
+  <input type="hidden"  name="book_cover" id="cover">
   </form>
 		<script th:inline="javascript">	
 			let userfind;
@@ -85,8 +86,10 @@
 								let isbn13=books[i].isbn13;
 								let pubdate=books[i].pubDate;
 								let priceStandard=books[i].priceStandard;
-								let categoryName=books[i].categoryName;
+								let category_name=books[i].categoryName;
+								let categoryName=books[i].categoryName.replace("국내도서>","").substring(0,category_name.replace("국내도서>","").indexOf(">"));
 								let adult=books[i].adult;
+								let cover=books[i].cover;
 								
 								//2. tbody 행 추가 템플릿 리터럴 <td onClick='ajax_hope_write(${JSON.stringify(books[i])})'>${title}</td>
 								let row = `
@@ -113,14 +116,17 @@
 				console.log('클릭');
 				//let parseItem = JSON.parse(item.getAttribute(''));
 				//알라딘 json 데이터를 문자열 파싱과정에서 "", '' 문제 때문에 에러 가능성
+				let category_name=bookData[index].categoryName;
+				let categoryName=bookData[index].categoryName.replace("국내도서>","").substring(0,category_name.replace("국내도서>","").indexOf(">"));
 				$("#title").val(bookData[index].title);
 				$("#author").val(bookData[index].author);
 				$("#publisher").val(bookData[index].publisher);
 				$("#isbn13").val(bookData[index].isbn13);
 				$("#pubDate").val(bookData[index].pubDate);
 				$("#priceStandard").val(bookData[index].priceStandard);
-				$("#categoryName").val(bookData[index].categoryName);
+				$("#categoryName").val(categoryName);
 				$("#adult").val(bookData[index].adult);
+				$("#cover").val(bookData[index].cover);
 				$("#hope_form").submit();
 				
 			}

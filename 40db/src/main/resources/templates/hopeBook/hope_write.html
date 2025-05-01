@@ -43,6 +43,10 @@
 					<label for="isbn" class="form-label">ISBN</label> <input
 						th:value="${isbn13}" type="text" name="book_isbn" id="isbn" class="form-control" readonly>
 				</div>
+				<div class="my-3">
+					<label for="isbn" class="form-label">ISBN</label> <input
+						th:value="${book_cover}" type="hidden" name="book_cover" id="book_cover" class="form-control" readonly>
+				</div>
 				<div>
 					<label for="book_reason">신청사유</label>
 					<textarea id="book_reason" name="book_reason" class="form-control"></textarea>
