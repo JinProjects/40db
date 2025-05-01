@@ -183,6 +183,37 @@ public class BookHopeController {
 	@GetMapping("/hopeBook/hopeAdminDetail/{id}")
 	public String hopeAdminDetail(@PathVariable Long id, Model model) {
 		model.addAttribute("dto",bookHopeService.find(id) );
+		String name = "";
+		String layout = "fragments/layout";
+	      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	      System.out.println("authentication.isAuthenticated()="+authentication.isAuthenticated());
+	     
+	      if(authentication != null && authentication.isAuthenticated()) {
+	    	  
+	         Object principal =  authentication.getPrincipal();
+	         if(principal instanceof UserDetails) {
+	        	name = ((UserDetails) principal).getUsername(); 
+	         }else {
+	        	 name = principal.toString();
+	         }
+	         
+	         Collection<? extends GrantedAuthority> authorites = authentication.getAuthorities();
+	         boolean isAdmin = authorites.stream().anyMatch(grantedAuthority -> 
+	         grantedAuthority.getAuthority().equals("ROLE_ADMIN")
+	        		 );
+	        		          
+	         if(isAdmin) {
+	        	layout = "fragments/admin/adminLayout";
+	            model.addAttribute("layoutDeco", layout);
+	         }else {
+	            model.addAttribute("layoutDeco", layout);
+	         }
+	      }
+	      if(name != null){
+	    	  System.out.println(name);
+	         model.addAttribute("layoutDeco", layout);
+	      }
+	      model.addAttribute("active", "hope_list");
 		return "/hopeBook/hope_admin_detail";
 	}
 	 

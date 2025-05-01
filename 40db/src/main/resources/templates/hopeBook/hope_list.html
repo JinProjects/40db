@@ -43,7 +43,7 @@
 				</tbody>
 			</table>
 			<div class="my-3">
-				<p class="text-end"> <a th:href="@{/hopeBook/hope_search}" class="btn btn-light" sec:authorize="isAuthenticated()">신청하기</a> </p>
+				<p class="text-end"> <a th:href="@{/hopeBook/hope_search}" class="btn btn-light" sec:authorize="hasRole('ROLE_MEMBER')">신청하기</a> </p>
 			</div>
 				<tfoot>
 					<tr>
