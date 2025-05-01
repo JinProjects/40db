@@ -78,6 +78,19 @@ public class BookHopeService {
 	        return false;
 	    }
 	  }
+	public boolean hopeAdminUpdateNo(Long bookHopeNo, String status) {
+		Optional<BookHope> optionalBookHope= bookHopeRepository.findById(bookHopeNo);
+		
+		if (optionalBookHope.isPresent()) {
+	        BookHope bookHope = optionalBookHope.get();
+	        bookHope.setBook_hope_stat(status); // 상태 변경
+	        bookHopeRepository.save(bookHope); // DB 저장
+	        return true;
+	    } else {
+	        return false;
+	    }
+	  }
+	 
 	 
 
 }

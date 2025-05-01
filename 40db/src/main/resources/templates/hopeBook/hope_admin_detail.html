@@ -59,9 +59,26 @@
 			    hiddenForm.appendChild(inputStat);
 			    hiddenForm.action ='/40db/hopeBook/hopeAdminUpdate';
 			    hiddenForm.submit();
-			    alert('도서관 장서 등록이 완료되었습니다.')
+			    alert('해당 희망도서가 장서에 추가되었습니다.')
 			    //document.body.appendChild(form);
 			    //form.submit();
+			}
+			
+			function btnHopeAdminUpdateNo(status){
+				const bookHopeNo = document.getElementById('bookHopeNo').value;
+				 let hiddenForm = document.getElementById('hiddenForm');
+				 
+				const inputStat = document.createElement('input');
+			    inputStat.type = 'hidden';
+			    inputStat.name = 'book_hope_stat';
+			    inputStat.value = status;
+				    
+			    hiddenForm.setAttribute("charset", "UTF-8");
+			    hiddenForm.setAttribute("enctype", "application/x-www-form-urlencoded");
+			    hiddenForm.appendChild(inputStat);
+			    hiddenForm.action ='/40db/hopeBook/hopeAdminUpdateNo';
+			    hiddenForm.submit();
+			    alert('해당 희망도서를 반려했습니다.')
 			}
 			
 			</script>
@@ -114,7 +131,7 @@
 				</div>
 	<!-- 			<div class="my-3" class="btnWrap"> -->
 				<div class="my-3 btnWrap" >
-					<button type="button" onclick="btnHopeAdminUpdate('반려')" class="btn btn-outline-primary">반려</button>
+					<button type="button" onclick="btnHopeAdminUpdateNo('반려')" class="btn btn-outline-primary">반려</button>
 					<button type="button" onclick="btnHopeAdminUpdate('신청완료')" class="btn btn-primary">등록</button>
 				</div>
 		<!-- </form>  -->

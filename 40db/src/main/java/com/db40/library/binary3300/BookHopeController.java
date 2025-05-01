@@ -215,6 +215,15 @@ public class BookHopeController {
 		return "redirect:/hopeBook/hope_list";
     }
 	
+	@PostMapping("/hopeBook/hopeAdminUpdateNo")
+    public String hopeAdminUpdateNo(@RequestParam("bookHopeNo") Long bookHopeNo,
+            					  @RequestParam("book_hope_stat") String status, BookHope bookHope) {
+		bookHopeService.hopeAdminUpdateNo(bookHopeNo, status);
+		return "redirect:/hopeBook/hope_list";
+	}
+	
+	
+	
 //    @GetMapping("/hopeBook/hopeAdminUpdate")
 //    public String showAdminDetailPage(HttpServletRequest request , Model model) {
 //    	String hopeStatUpdate =  request.getParameter("hopeStatUpdate");
