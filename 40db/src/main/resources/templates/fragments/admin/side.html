@@ -32,10 +32,10 @@ layout:decorate="~{fragments/admin/adminLayout}">
           <a class="nav-link btnActive" th:href="@{/admin/booksManage}" th:classappend="${active == 'booksManage'} ? 'active'">도서관리</a>
         </li>
          <li class="nav-item">
-          <a class="nav-link btnActive" th:href="@{/hopeBook/hope_list}">희망도서현황</a>
+          <a class="nav-link btnActive" th:href="@{/hopeBook/hope_list}" th:classappend="${active == 'hope_list'} ? 'active'">희망도서현황</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link btnActive" th:href="@{/borrow/alllist}">회원대출목록</a>
+          <a class="nav-link btnActive" th:href="@{/borrow/alllist}" th:classappend="${active == 'allList'} ? 'active'">회원대출목록</a>
         </li>
       </ul>
       <hr class="d-sm-none">

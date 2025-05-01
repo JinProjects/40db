@@ -18,13 +18,15 @@ body {
 <th:block th:replace="fragments/header::header"/>
 <div sec:authorize="isAnonymous()">
 <!--  <div sec:authorize="isAuthenticated()">  -->
+<div class="container mt-4 mb-4">
 		<th:block layout:fragment="content"/>	
+</div>
 <!-- 	</div> -->
 	</div>
 <!-- 	<div class="row" sec:authorize="isAnonymous()"> -->
 	 <div class="row" sec:authorize="isAuthenticated()"> 
 
-		<div class="col-sm-8">
+		<div class="container mt-4 mb-4">
 			<th:block layout:fragment="content"/>	
 		</div>
 	</div>
