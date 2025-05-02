@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException; // 예외 처리 추가
 import org.springframework.http.HttpStatus; // HttpStatus 추가
 
+import com.db40.library.binary3300.PagingDto;
 import com.db40.library.member.*;
 import lombok.RequiredArgsConstructor;
 
@@ -23,12 +24,17 @@ public class BorrowController {
     private final BorrowRepository borrowRepository; // 이름 변경 (inOutRepository -> borrowRepository)
     private final MemberRepository memberRepository;
     private final BooksRepository booksRepository;
-
+    private final BorrowService borrowService;
     @GetMapping("/borrow/alllist")
-    public String allList(Model model) {
-        List<Borrow> allList = borrowRepository.findAll();
-        allList.sort(new BorrowComparator());
-        model.addAttribute("allList", allList);
+    public String allList(Model model, @RequestParam( value="page" , defaultValue="0")	int page) {
+//        List<Borrow> allList = borrowRepository.findAll();
+//        allList.sort(new BorrowComparator());
+        
+        model.addAttribute("allList"   , borrowService.getPaging(page));  //10개씩
+		//System.out.println("........" + this.service.findAll().size());
+		model.addAttribute("paging" , new PagingDto(borrowRepository.findAll().size() , page)   );
+		/* model.addAttribute("allList", allList); */
+        model.addAttribute("active", "allList");
         return "borrow/inout_admin";
     }
 

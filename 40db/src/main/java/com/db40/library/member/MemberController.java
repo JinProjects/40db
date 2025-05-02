@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class MemberController {
@@ -33,19 +34,22 @@ public class MemberController {
 	@Autowired KaKaoLogin kakao;
 	@Autowired NaverLogin naver;
 	@Autowired GoogleLogin google;
+	
+	/* 로그인 사용자 접속 제한 */
+	public boolean isAuthenticated(Principal principal) {
+	    return principal != null;
+	}
 
 	/* 기본 회원가입 페이지 */
 	@GetMapping("/member/join")
 	public String join(HttpServletRequest request, Principal principal, MemberForm memberForm) {
-		if ( principal != null) {
-			return "member/mypage/recentBorrow";
-		}
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
 		return "member/join"; }
 	
 	/* 기본 회원가입 기능 */
 	@PostMapping("/member/join")
-	public String join(@Valid MemberForm memberForm, BindingResult bindingResult) {  
-		
+	public String join(@Valid MemberForm memberForm, BindingResult bindingResult, Principal principal) {  
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
 		if(bindingResult.hasErrors()) { return "member/join"; }
 		if( !memberForm.getMemberPass().equals(  memberForm.getPassword2()) ) {
 			//bindingResult.rejectValue(필드명 , 오류코드, 에러메시지)
@@ -82,12 +86,10 @@ public class MemberController {
 	
 	/* 통합 회원가입 ( 일반, 카카오, 네이버 ) */
 	/* 통합 회원가입 ( 일반, 카카오, 네이버 ) */
-	// 통합 로그인 / 회원가입 / 로그인 된 유저일 경우 마이페이지로 이동
+	// 통합 로그인 / 회원가입 
 	@GetMapping("/member/login") 
 		public String identify(HttpServletRequest request, Principal principal, Model model) {
-			if(principal != null) {
-				return "member/mypage/recentBorrow";
-			}
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
 			model.addAttribute("kakao", kakao.identify());	// 카카오
 			model.addAttribute("naver", naver.identify());	// 네이버
 			model.addAttribute("google", google.identify()); // 구글
@@ -96,7 +98,8 @@ public class MemberController {
 	
 	// localhot:8080/kakao 사용자 정보 가져오기 - 카카오
 	@GetMapping("/kakao")
-	public String  kakaouser(@RequestParam("code") String code, Model model) {
+	public String  kakaouser(@RequestParam("code") String code, Model model, Principal principal) {
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
 		List<String>  infos = kakao.identified(code);
 		// 성별 타입 변환
 		String gend = infos.get(3).toUpperCase();
@@ -124,7 +127,8 @@ public class MemberController {
 	}
 	
 	@GetMapping("/naver")
-	public String naveruser(@RequestParam("code") String code, String state, Model model) {
+	public String naveruser(@RequestParam("code") String code, String state, Model model, Principal principal) {
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
 		List<String> infos = naver.identified(code, state);
 		// 성별 타입 변환
 		char genderchar = infos.get(3).charAt(0);
@@ -150,7 +154,8 @@ public class MemberController {
 		return "member/join";
 	}
 	@GetMapping("/google")
-	public String googleuser(@RequestParam("code") String code, Model model) {
+	public String googleuser(@RequestParam("code") String code, Model model, Principal principal) {
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
 		List<String> infos = google.identified(code);
 		
 		MemberForm memberForm = new MemberForm();
@@ -166,10 +171,13 @@ public class MemberController {
 	/* 아이디 찾기 */
 	/* 아이디 찾기 페이지 */
 	@GetMapping("/member/findid")
-	public String findid() { return "member/findid";}
+	public String findid(Principal principal) { 
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
+		return "member/findid";}
 	
 	@PostMapping("/member/findid")
-	public String findid(String realName, String mobileNumber, Model model) {
+	public String findid(String realName, String mobileNumber, Model model, Principal principal) {
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
 		Long find = service.forFindId(realName, mobileNumber);
 		Member member = new Member();
 		
@@ -184,7 +192,9 @@ public class MemberController {
 	}
 	
 	@GetMapping("/member/foundid")
-	public String foundid() { return "member/foundid";}
+	public String foundid(Principal principal) { 
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
+		return "member/foundid";}
 	/* 아이디 찾기 */
 	/* 아이디 찾기 */
 		
@@ -192,10 +202,13 @@ public class MemberController {
 	/* 비밀번호 찾기 */
 	/* 비밀번호 찾기 */
 	@GetMapping("/member/findpw")
-	public String findpw() { return "member/findpw"; }
+	public String findpw(Principal principal) { 
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
+		return "member/findpw"; }
 	
 	@PostMapping("/member/findpw")
-	public String findpw(String memberId, String realName, String mobileNumber, Model model) {
+	public String findpw(String memberId, String realName, String mobileNumber, Model model, Principal principal) {
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
 		Long findpw = service.forFindPass(memberId, realName, mobileNumber);
 		System.out.println(findpw);
 		if (findpw == null) {
@@ -207,10 +220,13 @@ public class MemberController {
 		}
 	
 	@GetMapping("/member/foundpw")
-	public String foundpw() { return "member/foundpw";}
+	public String foundpw(Principal principal) { 
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
+		return "member/foundpw";}
 	
 	@PostMapping("/member/foundpw")
-	public String foundpw(Long id, String memberPass) { 
+	public String foundpw(Long id, String memberPass, Principal principal) { 
+		if (isAuthenticated(principal)) { return "/member/mypage/userInformation"; }
 		service.updatePass(id, memberPass);
 		return "member/login";
 	}
@@ -221,7 +237,7 @@ public class MemberController {
 	/* 마이페이지 */
 	/* 마이페이지 */
 	@GetMapping("/member/mypage/main")
-	public String mypageMain() {  return "member/mypage/recentBorrow"; }
+	public String mypageMain() {  return "member/mypage/userInformation"; }
 	
 	@GetMapping("/member/mypage/upass")
 	public String mypageUpdatePassword() {
@@ -229,18 +245,24 @@ public class MemberController {
 	}
 	
 	@PostMapping("/member/mypage/upass")
-	public String mypageUpdatePassword_post(String memberId, String oldpassword, String newpassword) {
+	public String mypageUpdatePassword_post(String memberId, String oldpassword, String newpassword, String newpassword2, RedirectAttributes redirectAttributes) {
+		if (!newpassword.equals(newpassword2)) {
+			redirectAttributes.addFlashAttribute("fail", "새 비밀번호가 일치하지 않습니다");
+			return "redirect:/member/mypage/upass";
+		}
 		Long id = service.selectUserMemberId(memberId).getId();
-		service.updatePasswordInMypage(newpassword, id, oldpassword);
-		return "member/mypage/updatePassword";
+		service.updatePasswordInMypage(newpassword, id, oldpassword, redirectAttributes);
+		return "redirect:/member/mypage/upass";
 	}
 	
 	@GetMapping("/member/mypage/uemail")
 	public String mypageUpdateEmail() { return "member/mypage/updateEmail"; }
 	
 	@PostMapping("/member/mypage/uemail")
-	public String mypageUpdateEmail_post(String memberId, String memberPass, String newemail) {
-		return "a";
+	public String mypageUpdateEmail_post(String memberId, String memberPass, String newemail, RedirectAttributes redirectAttributes) {
+		Long id = service.selectUserMemberId(memberId).getId();
+		service.updateEmailInMypage(id, memberPass, newemail, redirectAttributes);
+		return "redirect:/member/mypage/uemail";
 	}
 	
 	@GetMapping("/member/mypage/uaddress")
@@ -248,35 +270,42 @@ public class MemberController {
 		return "member/mypage/updateAddress"; }
 	
 	@PostMapping("/member/mypage/uaddress")
-	public String mypageUpdateAddress_post(String memberId, String addressPost, String addressRoad, String addressJibun, String addressDetail) {
-		service.updateAddressInMypage(memberId, addressPost, addressRoad, addressJibun, addressDetail);
-		return "member/mypage/updateAddress";
+	public String mypageUpdateAddress_post(String memberId, String addressPost, String addressRoad, String addressJibun, String addressDetail, RedirectAttributes redirectAttributes) {
+		Long id = service.selectUserMemberId(memberId).getId();
+		service.updateAddressInMypage(id, addressPost, addressRoad, addressJibun, addressDetail, redirectAttributes);
+		return "redirect:/member/mypage/uaddress";
 	}
 	
 	@GetMapping("/member/mypage/umobile")
 	public String mypageUpdateMobile() { return "member/mypage/updateMobileNumber"; }
 	
 	@PostMapping("/member/mypage/umobile")
-	public String mypageUpdateMobile_post(String memberId2, String newMobileNumber) {
-		service.updateMobileNumerInMypage(memberId2, newMobileNumber);
-		return "member/mypage/updateMobileNumber";
+	public String mypageUpdateMobile_post(String memberId2, String newMobileNumber, String memberPass, RedirectAttributes redirectAttributes) {
+		Long id = service.selectUserMemberId(memberId2).getId();
+		service.updateMobileNumberInMypage(id, newMobileNumber, memberPass, redirectAttributes);
+		return "redirect:/member/mypage/umobile";
 	}
 	
 	@GetMapping("member/mypage/udname")
 	public String mypageUpdatedName() { return "member/mypage/updateDisplayName"; }
 	
 	@PostMapping("member/mypage/udname")
-	public String mypageUpdatdName_post(String memberId2, String newdisplayName) {
-		service.updateDisplayNameInMypage(memberId2, newdisplayName);
-		return "member/mypage/updateDisplayName";
+	public String mypageUpdatdName_post(String memberId2, String newdisplayName, RedirectAttributes redirectAttributes) {
+		Long id = service.selectUserMemberId(memberId2).getId();
+		service.updateDisplayNameInMypage(id, newdisplayName, redirectAttributes);
+		return "redirect:/member/mypage/udname";
 	}
 	@GetMapping("member/mypage/deleteAccount")
 	public String deleteAccount() { return "member/mypage/deleteAccount"; }
 	
 	@PostMapping("member/mypage/deleteAccount")
-	public String deleteAccount(String memberId2, String realName, String memberPass, HttpServletRequest request, HttpServletResponse response) {
+	public String deleteAccount(String memberId2, String chkmemberId, String chkmemberPass, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
 	    Long id = service.findIDByMemberId(memberId2);
-	    service.deleteAccountInMypage(id, realName, memberPass);
+	    int result = service.deleteAccountInMypage(id, chkmemberId, chkmemberPass, redirectAttributes);
+	    
+	    if (result==0) {
+	    	return "redirect:/member/mypage/deleteAccount";
+	    }
 
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    if (authentication != null) {
@@ -291,7 +320,7 @@ public class MemberController {
 	// 아이디
 	@ResponseBody
 	@GetMapping("/member/join/reduplicationMId/{memberId}")
-	public Map<String, Object> reduplicationMIdCheck(@PathVariable String memberId) {
+	public Map<String, Object> reduplicationMIdCheck(@PathVariable String memberId, Principal principal) {
 	    Map<String, Object> resultMId = new HashMap<>();
 	    
 	    boolean exists = mR.findByMemberId(memberId).isPresent(); // true = 이미 존재
@@ -341,6 +370,26 @@ public class MemberController {
 	@GetMapping("/getMobileNumberByMemberId") @ResponseBody
 	public  String getMobileNumberByMemberId(@RequestParam String memberId) {
 		return service.selectMobileNumberByMemberId(memberId);
+	}
+	// 실명
+	@GetMapping("/getRealNameByMemberId") @ResponseBody
+	public  String getRealNameByMemberId(@RequestParam String memberId) {
+		return service.selectRealNameByMemberId(memberId);
+	}
+	// 생년월일
+	@GetMapping("/getBirthDateByMemberId") @ResponseBody
+	public String getBirthDateByMemberId(@RequestParam String memberId) {
+		return service.selectBirthDateByMemberId(memberId);
+	}
+	// 성별
+	@GetMapping("/getGenderByMemberId") @ResponseBody
+	public  String getGenderByMemberId(@RequestParam String memberId) {
+		return service.selectGenderByMemberId(memberId);
+	}
+	// 가입일
+	@GetMapping("/getJoinDateByMemberId") @ResponseBody
+	public  String getJoinDateByMemberId(@RequestParam String memberId) {
+		return service.selectJoinDateByMemberId(memberId);
 	}
 	
 	

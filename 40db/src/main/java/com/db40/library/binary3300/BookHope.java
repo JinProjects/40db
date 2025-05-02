@@ -41,6 +41,12 @@ public class BookHope {
 	@Column(updatable = false)
 	private LocalDateTime createDate = LocalDateTime.now();
 	
+	private Integer bookPriceStandard;
+	
+	private String bookCategoryName;
+	
+	private Boolean bookAdult;
+	
 	
 	//@OneToMany(mappedBy = "bookHope")
 	//private Member member;

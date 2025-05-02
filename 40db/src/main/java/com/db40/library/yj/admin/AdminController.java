@@ -3,12 +3,18 @@ package com.db40.library.yj.admin;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,12 +28,16 @@ import com.db40.library.sh.Category;
 import com.db40.library.yj.AdminBooksRepository;
 import com.db40.library.yj.AdminBooksService;
 import com.db40.library.yj.CategoryRepository;
+import com.db40.library.binary3300.*;
 
 @Controller
 public class AdminController {
 	
 	@Autowired
 	AdminRepository adminRepository;
+	@Autowired
+	AdminService adminService;
+	
 	@Autowired
 	MemberStatusRepository memberStatusRepository;
 	@Autowired
@@ -43,23 +53,41 @@ public class AdminController {
 	public String test(Model model) {
 		//model.addAttribute("list", bookApi.findBooks("java"));
 
-		return "admin/adminMain";
+		return "redirect:/admin/membersManage";
 	}
 	
 	@GetMapping("/admin/membersManage")
-	public String membersManage(Model model) {
+	public String membersManage(Model model, @RequestParam( value="page" , defaultValue="0")	int page) {
 		List<Member> memberList = adminRepository.findAll();
 		
+		model.addAttribute("list"   , adminService.memberGetPaging(page));  //10개씩
+		//System.out.println("........" + this.service.findAll().size());
+		model.addAttribute("paging" , new PagingDto(memberList.size() , page)   );  //##전체리스트뽑고
+
 		for(Member member : memberList) {
 			MemberStatus memberStatus = memberStatusRepository.findById(member.getMemberStatus().getId()).get();
 			member.setMemberStatus(memberStatus);
 		}
 		
-		
-		model.addAttribute("list",memberList);
+		model.addAttribute("active", "memberManage");
+		model.addAttribute("memberList",memberList);
 		return "admin/membersManage";
 	}
-	
+	@PostMapping("/admin/membersSearch")
+	public String membersSearch(HttpServletRequest request, Model model, @RequestParam( value="page" , defaultValue="0")	int page) {
+		String keyword = request.getParameter("membersSearch");
+		System.out.println("keyword = "+keyword);
+		//List<Member> findMemberList = adminRepository.findAllByMemberIdOrderbyIdDesc(keyword);
+		
+		model.addAttribute("list"   , adminService.searchMemberGetPaging(page,keyword));  //10개씩
+		//System.out.println("........" + this.service.findAll().size());
+		model.addAttribute("paging" , new PagingDto(1 , page)   );  //##전체리스트뽑고
+
+		/* model.addAttribute("list",findMemberList); */
+		model.addAttribute("active","memberManage");
+		System.out.println("실행");
+		return "admin/membersManage";
+	}
 	@PostMapping("/admin/memberUpdate")
 	public String memberUpdate(@RequestParam String memberId, @RequestParam String statusVal) {
 		System.out.println("memberId="+memberId);
@@ -81,14 +109,28 @@ public class AdminController {
 	//======bookManage=================================================================
 	
 	@GetMapping("/admin/booksManage")
-	public String booksManage(Model model) {
-		List<Books> bookList = booksRepository.findAll();
-		model.addAttribute("list", bookList);
+	public String booksManage(Model model, @RequestParam( value="page" , defaultValue="0")	int page) {
+		List<Books> bookList = booksRepository.findAllByOrderByBookNoDesc();
+		model.addAttribute("list"   , adminService.bookGetPaging(page));  //10개씩
+		//System.out.println("........" + this.service.findAll().size());
+		model.addAttribute("paging" , new PagingDto(bookList.size() , page)   );  //##전체리스트뽑고
+
+		model.addAttribute("bookList", bookList);
+		model.addAttribute("active", "booksManage");
 		return "admin/booksManage";
 	}
-	@GetMapping("/admin/findBook")
-	public String findBook() {
-		return ""; 
+	
+	@PostMapping("/admin/booksSearch")
+	public String booksSearch(HttpServletRequest request, Model model, @RequestParam( value="page" , defaultValue="0")	int page) {
+		List<Books> bookList = booksRepository.findAllByOrderByBookNoDesc();
+		String keyword = request.getParameter("booksSearch");
+		model.addAttribute("list"   , adminService.searchBookGetPaging(page,keyword));  //10개씩
+		//System.out.println("........" + this.service.findAll().size());
+		model.addAttribute("paging" , new PagingDto(1 , page)   );  //##전체리스트뽑고
+
+		//model.addAttribute("bookList", bookList);
+		model.addAttribute("active","booksManage");
+		return "/admin/booksManage";
 	}
 	//도서등록
 	@PostMapping("/admin/insertBook")
@@ -147,7 +189,12 @@ public class AdminController {
 //	}
 	//--------------------------------------------
 	
-	
+	@GetMapping(value="/admin/memberDelete/{memberId}")
+	public String memberDelete(@PathVariable String memberId){ 
+		System.out.println("memberId="+memberId);
+		adminRepository.deleteByMemberId(memberId);
+		return "redirect:/admin/membersManage";
+	}
 	@GetMapping(value="/admin/gptHashTag",produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String gptHashTag(@RequestBody String content) {

@@ -6,7 +6,7 @@
 <!-- ##1 -->
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>마이페이지</title>
 </head>
 <body style="background-color:#D9D9D9">
 	<div layout:fragment="content">
@@ -31,11 +31,6 @@
 				<div class="container bg-secondary text-white d-flex flex-column" style="max-width: 60%; max-height: 100%;">
 						  <h1 class="row align-items-end text-white displayName2" id="displayName2" style="font-size: 55px; height: 50%"></h1>
 						  <span class="badge bg-dark col-6 memberId2" style="font-size: 15px" sec:authorize="isAuthenticated()"  sec:authentication="principal.username" id="memberId2"></span>
-				 <!--  <div class="d-flex container bg-secondary text-dark d-flex align-items-center" style="height: 40%;">
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  </div> -->
 				</div>
 			
 			
@@ -46,8 +41,10 @@
 			  <div class="d-flex container bg-light rounded-bottom-3 rounded-top-3 justify-content-end" style="max-width: 100%; height: 99%;">
 				
 			<!-- 메인 -->
-			<div class="bg-white p-4 shadow-lg rounded-3 me-auto" style="width: 74%;">  
-			    <h1 class="mb-4">이메일 변경</h1>  
+			<div class="bg-white shadow-lg rounded-3 me-auto" style="width: 74%; padding: 50px 32px; font-size: 1.1rem;">  
+			    <h1 class="mb-4 text-primary"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+				  <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
+				</svg> 이메일 변경</h1>  
 			    <form method="post" th:action="@{/member/mypage/uemail}" class="needs-validation" novalidate style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
 			
 			        <!-- 숨겨진 memberId 필드 -->
@@ -58,25 +55,26 @@
 			
 			        <!-- 현재 이메일 -->
 			        <div class="mb-3 w-75 text-center">
-			            <label for="email" class="form-label">현재 사용 중인 이메일:</label>
+			            <label for="email" class="form-label">현재 이메일:</label>
 			            <div class="badge bg-light text-dark fs-5 py-2 px-4" id="email" style="border-radius: 20px;"></div>
 			        </div>
 			
 			        <!-- 기존 비밀번호 입력 -->
 			        <div class="form-floating mb-3 w-75">
-			            <input type="password" name="oldpassword" id="oldpassword" class="form-control" placeholder="기존 비밀번호" required>
-			            <label for="oldpassword">기존 비밀번호</label>
+			            <input type="password" name="memberPass" id="memberPass" class="form-control" placeholder="비밀번호 확인" required>
+			            <label for="oldpassword">비밀번호 확인</label>
 			        </div>
 			
 			        <!-- 새 이메일 입력 -->
 			        <div class="form-floating mb-3 w-75">
 			            <input type="email" name="newemail" id="newemail" class="form-control" placeholder="새 이메일" required>
 			            <label for="newemail">새 이메일</label>
+			            <div class="resultEmail mt-1 ps-2 small"></div>
 			        </div>
 			
 			        <!-- 제출 버튼 -->
 			        <div class="d-flex justify-content-center w-75">
-			            <button type="submit" class="btn btn-primary w-50" style="font-size: 16px; padding: 12px;">변경하기</button>
+			            <button type="submit" class="btn btn-primary w-50" id="submit" disabled style="font-size: 16px; padding: 12px;">변경하기</button>
 			        </div>
 			
 			    </form>
@@ -87,12 +85,12 @@
 				
 				<!-- 내비게이터 -->
 				<div class="d-flex flex-column align-items-end bg-light" style="height: 100%; width: 25%; gap:20px">
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">도서대출현황</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소지변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호변경</a></div>
-				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">회원 정보</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호 변경</a></div>
+				    <div class="btn text-dark shadow" style="width: 100%; background-color: #e4e6e9; border-color: #e4e6e9"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명 변경</a></div>
 				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mb-3" style="width: 100%; margin-top: auto;"><a th:href="@{/member/mypage/deleteAccount}" style="text-decoration: none; color: #f44949;">회원탈퇴</a></div>
 				</div>
 			  
@@ -100,6 +98,82 @@
 			</div>
 
 		</div>
+	<script>
+	// 이메일 중복 체크
+	// 이메일 양식 확인
+	$(function() {
+	    $("#newemail").on("keyup", function() {
+	        let email = $(this).val().trim();
+	
+	        // 이메일이 비어있으면 바로 종료
+	        if (email.length === 0) {
+	            $(".resultEmail").fadeOut().empty();
+	            $("#newemail").removeClass("is-valid is-invalid");
+	            return;
+	        }
+	
+	        // 이메일 형식 체크 ( 이메일@도메인.주소 )
+	        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+	        if (!emailPattern.test(email)) {
+	            $(".resultEmail")
+	                .removeClass("success text-success d-none")
+	                .addClass("fail text-danger")
+	                .html("⚠️ 올바른 이메일 형식이 아닙니다.");
+	            $("#newemail")
+	                .removeClass("is-valid")
+	                .addClass("is-invalid");
+	            $("#submit")
+            		.prop("disabled", true);
+	            $(".resultEmail").fadeIn();
+	            return; // 이메일 형식이 올바르지 않으면 바로 종료
+	        }
+	
+	        // 이메일 형식이 맞으면 중복 체크 넘어감
+	        $(".resultEmail").fadeIn();
+	        reduplicationEmailCheck(email);
+	    });
+	});
+	// 이메일 중복 체크
+	function reduplicationEmailCheck(email) {
+	    $.ajax({
+	        url: "/40db/member/join/reduplicationEmail/" + encodeURIComponent(email),
+	        type: "GET",
+	        dataType: "json",
+	        success: function(json) {
+	            if (json.resultEmail === "사용가능") {
+	                $(".resultEmail")
+	                    .removeClass("fail text-danger d-none")
+	                    .addClass("success text-success")
+	                    .html("✔️ 사용 가능한 이메일입니다!");
+	                $("#newemail")
+	                    .removeClass("is-invalid")
+	                    .addClass("is-valid");
+	                $("#submit")
+	                	.prop("disabled", false);
+	            } else {
+	                $(".resultEmail")
+	                    .removeClass("success text-success d-none")
+	                    .addClass("fail text-danger")
+	                    .html("❌ 이미 사용 중인 이메일입니다.");
+	                $("#newemail")
+	                    .removeClass("is-valid")
+	                    .addClass("is-invalid");
+	                $("#submit")
+                		.prop("disabled", true);
+	            }
+	        },
+	        error: function(xhr, status, msg) {
+	            console.error("에러 발생:", status + " / " + msg);
+	        }
+	    });
+	}
+	// 포커스 벗어나면 알림 숨김
+	$(function() {
+		$("#newemail").on("blur", function() {
+			$(".resultEmail").addClass("d-none");
+		});
+	});
+	</script>
   	<script>
   	// memberId값으로 email 값 가져오기
   	 $(document).ready(function() {
@@ -137,6 +211,8 @@
          });
      });
 	</script>
+	<script th:if="${success}" th:inline="javascript"> alert([[${success}]]);</script>
+ 	<script th:if="${fail}" th:inline="javascript"> alert([[${fail}]]);</script>
 
 	</div>
 </body>

@@ -1,14 +1,16 @@
 package com.db40.library.binary3300;
 
 import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,9 +24,10 @@ import lombok.RequiredArgsConstructor;
 public class BookHopeController {
 	private final BookHopeService bookHopeService;
 	@Autowired BookHopeApi bookHopeApi;
+	@Autowired BookHopeRepository bookHopeRepository;
 	
 	
-	// 희망도서 검색 첫페이지
+	// 희망도서 검색
 	@GetMapping("/hopeBook/hope_search")
 	public String hope_now(Model model) {
 		return "/hopeBook/hope_search";
@@ -85,6 +88,46 @@ public class BookHopeController {
 		model.addAttribute("list",bookHopeService.getPaging(page).getContent()); 
 		model.addAttribute("paging",new PagingDto(bookHopeService.findAll().size(),page)); 
 		
+
+//	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//	      UserDetails userDetails = (UserDetails)authentication.getPrincipal();
+//	      String name = userDetails.getUsername();
+//	      if(name.equals("admin")) {
+//	          model.addAttribute("layoutDeco", "fragments/admin/adminLayout");
+//	       }else {
+//	          model.addAttribute("layoutDeco", "fragments/layout");
+//	       }
+		String name = "";
+		String layout = "fragments/layout";
+	      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	      System.out.println("authentication.isAuthenticated()="+authentication.isAuthenticated());
+	     
+	      if(authentication != null && authentication.isAuthenticated()) {
+	    	  
+	         Object principal =  authentication.getPrincipal();
+	         if(principal instanceof UserDetails) {
+	        	name = ((UserDetails) principal).getUsername(); 
+	         }else {
+	        	 name = principal.toString();
+	         }
+	         
+	         Collection<? extends GrantedAuthority> authorites = authentication.getAuthorities();
+	         boolean isAdmin = authorites.stream().anyMatch(grantedAuthority -> 
+	         grantedAuthority.getAuthority().equals("ROLE_ADMIN")
+	        		 );
+	        		          
+	         if(isAdmin) {
+	        	layout = "fragments/admin/adminLayout";
+	            model.addAttribute("layoutDeco", layout);
+	         }else {
+	            model.addAttribute("layoutDeco", layout);
+	         }
+	      }
+	      if(name != null){
+	    	  System.out.println(name);
+	         model.addAttribute("layoutDeco", layout);
+	      }
+	      model.addAttribute("active", "hope_list");
 		return "hopeBook/hope_list"; 
 	}
 	
@@ -102,13 +145,23 @@ public class BookHopeController {
 		                       @RequestParam String author, 
 		                       @RequestParam String publisher, 
 		                       @RequestParam String isbn13, 
+		                       @RequestParam String pubDate, 
+		                       @RequestParam String priceStandard, 
+		                       @RequestParam String categoryName, 
+		                       @RequestParam boolean adult, 
 		                       Model model) {
 		    model.addAttribute("title", title);
 		    model.addAttribute("author", author);
 		    model.addAttribute("publisher", publisher);
 		    model.addAttribute("isbn13", isbn13);
+		    model.addAttribute("pubDate", pubDate);
+		    model.addAttribute("priceStandard", priceStandard);
+		    model.addAttribute("categoryName", categoryName);
+		    model.addAttribute("adult", adult);
+		    
 		    return "hopeBook/hope_write"; // 폼 페이지 이름
 		}
+		
 		
 	//3. 글 쓰고 희망도서 신청 
 	@PostMapping("/hopeBook/hope_insert")
@@ -119,7 +172,6 @@ public class BookHopeController {
         if(bookHopeService.saveBookHope(bookHope) != null) {  msg = "희망 도서 신청이 완료되었습니다.";}
 		rttr.addFlashAttribute("msg", msg);
 		return "redirect:/hopeBook/hope_list";  
-
     } 
 	
 	//관리자, 희망도서 디테일 확인 페이지
@@ -132,19 +184,20 @@ public class BookHopeController {
 	// 관리자, 희망도서 반려하기/등록하기 업데이트에서 하나로 될거같음
 	@PostMapping("/hopeBook/hopeAdminUpdate")
     public String hopeAdminUpdate(@RequestParam("bookHopeNo") Long bookHopeNo,
-            					  @RequestParam("status") String status, Model model) {
-		boolean success = bookHopeService.hopeAdminUpdate(bookHopeNo, status);
-        return "hopeBook/hope_admin_detail";
-    } 
-	
-    @GetMapping("/hopeBook/hopeAdminUpdate")
-    public String showAdminDetailPage(HttpServletRequest request , Model model) {
-    	String hopeStatUpdate =  request.getParameter("hopeStatUpdate");
-    	//String hopeStatUpdate =  (String)request.getAttribute("hopeStatUpdate");
-    	System.out.println("hopeStatUpdate="+ hopeStatUpdate);
-       // model.addAttribute("bookHope", bookHope);
-        return "redirect:/hopeBook/hope_list";
+            					  @RequestParam("book_hope_stat") String status) {
+		bookHopeService.hopeAdminUpdate(bookHopeNo, status);
+		
+		return "redirect:/hopeBook/hope_list";
     }
+	
+//    @GetMapping("/hopeBook/hopeAdminUpdate")
+//    public String showAdminDetailPage(HttpServletRequest request , Model model) {
+//    	String hopeStatUpdate =  request.getParameter("hopeStatUpdate");
+//    	//String hopeStatUpdate =  (String)request.getAttribute("hopeStatUpdate");
+//    	System.out.println("hopeStatUpdate="+ hopeStatUpdate);
+//       // model.addAttribute("bookHope", bookHope);
+//        return "redirect:/hopeBook/hope_list";
+//    }
 	
 
 }

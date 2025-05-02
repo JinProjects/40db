@@ -6,7 +6,7 @@
 <!-- ##1 -->
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>마이페이지</title>
 
 </head>
 <body style="background-color:#D9D9D9">
@@ -35,11 +35,6 @@
 				<div class="container bg-secondary text-white d-flex flex-column" style="max-width: 60%; max-height: 100%;">
 						  <h1 class="row align-items-end text-white displayName2" id="displayName2" style="font-size: 55px; height: 50%"></h1>
 						  <span class="badge bg-dark col-5 memberId2" style="font-size: 15px" sec:authorize="isAuthenticated()"  sec:authentication="principal.username" id="memberId2"></span>
-				 <!--  <div class="d-flex container bg-secondary text-dark d-flex align-items-center" style="height: 40%;">
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  </div> -->
 				</div>
 			
 			</div>
@@ -50,40 +45,49 @@
 				
 				<!-- 메인 -->
 				<!-- 메인 -->
-				<div class="bg-white p-4 shadow-lg rounded-3 me-auto" style="width: 74%;">
-					
-					
-					<form method="post" th:action="@{/member/mypage/udname}">
-					
-						<input type="text" name="memberId2" id="memberId2" class="form-control memberId2" th:value="${#authentication.name}" readonly>
-					
-						<span>새로 사용할 별명을 입력해주세요</span>
-						
-						<input type="text" name="newdisplayName" id="newdisplayName" class="form-control" placeholder="새 별명">
-						
-						<input type="submit" class="btn btn-outline-success" value="변경하기">
-					
-					</form>
-					
-					
+				<div class="bg-white shadow-lg rounded-3 me-auto" style="width: 74%; padding: 50px 32px; font-size: 1.1rem;">
+				    <h2 class="mb-4 text-primary d-flex align-items-center" style="gap: 12px;">
+				        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="currentColor" class="bi bi-person-vcard-fill" viewBox="0 0 16 16">
+						  <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm9 1.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4a.5.5 0 0 0-.5.5M9 8a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4A.5.5 0 0 0 9 8m1 2.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 0-1h-3a.5.5 0 0 0-.5.5m-1 2C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 0 2 13h6.96q.04-.245.04-.5M7 6a2 2 0 1 0-4 0 2 2 0 0 0 4 0"/>
+						</svg> 별명 변경
+				    </h2>
+				
+				    <form method="post" th:action="@{/member/mypage/udname}" style="display: flex; flex-direction: column; align-items: center; gap: 24px; padding-top:3rem;">
+				        
+				        <!-- 숨겨진 ID -->
+				        <input type="hidden" name="memberId2" id="memberId2" th:value="${#authentication.name}">
+				
+				        <!-- 새 별명 입력 -->
+				        <div class="form-floating w-75">
+				            <input type="tel" name="newdisplayName" id="newdisplayName" class="form-control" placeholder="새 별명">
+				            <label for="newdisplayName">새 별명<span style="font-size: 12px; color:gray;"> (한글, 영문, 숫자로만 조합, 2-20자)</span></label>
+				        </div>
+				
+				        <!-- 버튼 -->
+				        <div class="d-flex justify-content-center w-75 mt-2">
+				            <input type="submit" class="btn btn-primary btn-lg px-5 w-50" id="submit" disabled style="font-size: 16px; padding: 12px;" value="변경하기">
+				        </div>
+				    </form>
 				</div>
 					
 				
 				<!-- 내비게이터 -->
-			    <div class="d-flex flex-column align-items-end bg-light" style="height: 100%; width: 25%; gap:20px">
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">도서대출현황</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소지변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명변경</a></div>
-			    </div>
+				<div class="d-flex flex-column align-items-end bg-light" style="height: 100%; width: 25%; gap:20px">
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">회원 정보</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호 변경</a></div>
+				    <div class="btn text-dark shadow" style="width: 100%; background-color: #e4e6e9; border-color: #e4e6e9"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mb-3" style="width: 100%; margin-top: auto;"><a th:href="@{/member/mypage/deleteAccount}" style="text-decoration: none; color: #f44949;">회원탈퇴</a></div>
+				</div>
 			  
 			  </div>
 			</div>
 		</div>
-	<!-- jQuery library -->
-  	<script>
+	<script th:if="${success}" th:inline="javascript"> alert([[${success}]]);</script>
+ 	<script th:if="${fail}" th:inline="javascript"> alert([[${fail}]]);</script>
+	<script>
   	// memberId값으로 displayName 값 가져오기
   	 $(document).ready(function() {
          var memberId2 = $("#memberId2").text().trim();
@@ -100,9 +104,32 @@
              }
          });
      });
-  	
-  	$()
-</script>
+	</script>
+	<script>
+	// 별명
+	// 별명 형식 체크
+	$(function() {
+	    $("#newdisplayName").on("keyup", function() {
+	        let dName = $(this).val().trim();
+	
+	        // 정규식: 한글, 영문, 숫자 2~32자
+	        const dNameStyle = /^[가-힣a-zA-Z0-9]{2,20}$/;
+	
+	        // 공백이 있거나, 정규식 통과 못하면 invalid 처리
+	        if (dName.includes(" ") || !dNameStyle.test(dName)) {
+	            $("#newdisplayName")
+	                .removeClass("is-valid")
+	                .addClass("is-invalid");
+	            $("#submit").prop("disabled", true);
+	        } else {
+	            $("#newdisplayName")
+	                .removeClass("is-invalid")
+	                .addClass("is-valid");
+	            $("#submit").prop("disabled", false);
+	        }
+	    });
+	});
+	</script>
 	</div>
 </body>
 </html>

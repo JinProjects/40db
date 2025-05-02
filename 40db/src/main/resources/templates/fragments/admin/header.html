@@ -18,12 +18,12 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	  <div class="container-fluid">
 	    <ul class="navbar-nav">
 	      <li class="nav-item text-dark">
-	        <a class="nav-link text-dark active " href="#">더조은도서관</a>
+	        <a class="nav-link text-dark active " th:href="@{/main}">더조은도서관</a>
 	      </li>
 	      </ul>
          <ul class="navbar-nav d-flex">
 		      <li class="nav-item">
-		        <a class="nav-link text-dark" href="#">홈으로</a>
+		        <a class="nav-link text-dark" th:href="@{/main}">홈으로</a>
 		      </li>
 			     <li class="nav-item" sec:authorize="isAnonymous()">
 				  <a class="nav-link text-dark" th:href="@{/member/login}">로그인</a>
@@ -45,7 +45,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 		        
 		        
 		      <li class="nav-item">
-		        <a class="nav-link text-dark disabled" href="#" sec:authorize="hasRole('ADMIN')">대시보드</a>
+		        <a class="nav-link text-dark" th:href="@{/admin/membersManage}" sec:authorize="hasRole('ROLE_ADMIN')">대시보드</a>
 		      </li>
 	    </ul>
 	  </div>
@@ -58,7 +58,8 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	    <div class="nav-item"><a th:href="@{/admin/membersManage}" class="nav-link text-dark">회원관리</a></div>
 	    <div class="nav-item"><a th:href="@{/admin/booksManage}" class="nav-link text-dark">도서관리</a></div>
 	    <div class="nav-item"><a th:href="@{/hopeBook/hope_list}" class="nav-link text-dark">희망도서현황</a></div>
-	    <div class="nav-item"><a th:href="@{/admin/membersManage}" class="nav-link text-dark">반납확인</a></div>
+	    <div class="nav-item"><a th:href="@{/borrow/alllist}" class="nav-link text-dark">회원대출목록</a></div>
+	    <!-- <div class="nav-item"><a th:href="@{/admin/membersManage}" class="nav-link text-dark">반납확인</a></div> -->
   	</div>
 </body>
 </html>

@@ -10,6 +10,41 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <!-- Latest compiled JavaScript -->
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script th:inline="javascript">
+		$(function(){
+			let val = $('#actionData').val();
+			console.log(val);
+			console.log(val);
+		})	
+	/* $(function(){
+		let row = $(".btnActive");
+		$('.menu-wrap').on('click','.btnActive',function(e){
+			//e.preventDefault();
+			console.log('클릭');
+			let $clickedButton = $(this);
+			let $allLinks = $('.menu-wrap .btnActive');
+			
+			$allLinks.removeClass('active');
+			$clickedButton.addClass('active');
+		}); */
+		/* row.on('click',function(e){
+			e.preventDefault();
+			let $clickedButton = $(this);
+			//console.log($('.btnActive'));
+			//console.log($clickedButton[0]);
+			$clickedButton.addClass('active');
+			
+			$row = $clickedButton.closest('li');
+			let $rows = $row.siblings('');
+			console.log($rows);
+			console.log($rows[0])
+			console.log($clickedButton[0]);
+		//$row[0].removeClass('active');
+			
+		}) 
+	})*/
+</script>
 </head>
 <body>
 <th:block th:replace="fragments/admin/header::adminHeader"/>
@@ -18,7 +53,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
  		<th:block th:replace="fragments/admin/side::adminSide"/>
 		</div>
 		<div class="col-sm-8">
-			<th:block layout:fragment="adminContent"/>	
+			<th:block layout:fragment="content"/>	
 		</div>
 	</div>
 <!-- <th:block th:replace="fragments/footer::footer"/> -->

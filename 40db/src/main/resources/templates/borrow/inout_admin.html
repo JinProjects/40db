@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{fragments/layout}">
+	layout:decorate="~{fragments/admin/adminLayout}">
 <head>
 <meta charset="UTF-8">
 <link
@@ -12,25 +12,26 @@
 <body>
 	<div layout:fragment="content" class="container pt-5">
 		<h2 class="mb-4">전체 대출 목록</h2>
-		<table class="table table-striped table-bordered table-hover">
-			<thead class="table-dark">
+		<table class="table table-hover text-center">
+			<thead class="table-secondary">
 				<tr>
-					<th>대여번호</th>
-					<th>사용자ID</th>
-					<th>책 번호</th>
+					<th style="width: 5%">번호</th>
+					<th style="width: 8%">사용자ID</th>
+					<th style="width: 7%">책 번호</th>
 					<th>책 제목</th>
-					<th>대여상태</th>
-					<th>대여일</th>
-					<th>반납예정일</th>
-					<th>잔여대출기간</th>
-					<th>연체일</th>
+					<th style="width: 8%">대여상태</th>
+					<th style="width: 8%">대여일</th>
+					<th style="width: 8%">반납예정일</th>
+					<th style="width: 10%">잔여대출기간</th>
+					<th style="width: 8%">연체일</th>
 					<th>반납일</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="inOut : ${allList}">
-					<td th:text="${inOut.borrowNo}"></td>
-					<td th:text="${inOut.memberId.memberId}"></td>
+				<tr th:each="inOut, status : ${allList}">
+					<!-- <td th:text="${inOut.borrowNo}"></td> -->
+					<td  th:text="${allList.getTotalElements - ( allList.number*allList.size )- status.index}" ></td>
+					<td th:text="${inOut.Member.memberId}"></td>
 					<td th:text="${inOut.bookNo.bookNo}"></td>
 					<td th:text="${inOut.bookTitle}"></td>
 					<td th:text="${inOut.borrowState}"></td>
@@ -41,8 +42,66 @@
 					<td th:text="${#temporals.format(inOut.returnDate, 'yyyy-MM-dd ')}"></td>
 				</tr>
 			</tbody>
+			<tfoot>
+				  <tr> 
+		    			<td colspan="10">
+		    			<div>
+		    				<!-- <form action="/40db/admin/booksSearch" method="post" class="me-2">
+						  		<div class="d-flex">
+								  	<input type="text" class="me-2" name="booksSearch">
+								  	<input type="submit" class="btn btn-info btn-sm" value="검색">
+						  		</div>
+					  		</form> -->
+						  <ul class="pagination justify-content-center">   
+							<!--    10  이전(9 - 90) 11(10   - 100) -->
+							<li  class="page-item"    th:if="${  paging.start  >=   paging.bottomlist }">
+								<a class="page-link"    
+									 th:href="@{/borrow/alllist( page= ${  paging.start-2 } )}">  
+									<span>이전</span>
+								</a>
+							</li>
+						
+							<!--  paging / current=1, start=1, end=10  -->
+							<!-- 1 2 3 4 5 6 7 8 9 10(9) 다음(10)  -->
+							<li   th:each=" i :  ${  #numbers.sequence(  paging.start, paging.end,1)  }  "
+								  th:classappend=" ${ paging.current == i }  ? active" >
+								<a  th:text="${i}"
+								    class="page-link"
+								    th:href="@{/borrow/alllist(page=${i-1})}"
+								></a>
+							</li>	
+						
+						    <!-- 다음 --> 
+							<li  class="page-item"    th:if="${  paging.pagetotal >   paging.end}">
+								<a class="page-link"    
+									 th:href="@{/borrow/alllist( page= ${  paging.end} )}">
+									<span>다음</span>
+								</a>
+							</li>
+						    </ul>
+						   <!--  <div>
+					  			<button class="btn btn-info btn-sm" id="openModalBtn" >도서등록</button>
+						    </div> -->
+				  		</div>
+					  </td>
+				  </tr>	
+				  <div class="d-grid gap-2 d-md-flex ">
+			  	<!-- <button class="btn btn-info btn-sm" id="openModalBtn" th:text="도서등록"></button> -->
+				  <!-- 	<div class="d-flex justify-content-between w-100 align-items-center">
+					  	<form action="/40db/admin/booksSearch" method="post" class="me-2">
+					  		<div class="flex-fill">
+							  	<input type="text" name="booksSearch">
+							  	<input type="submit" class="btn btn-info" value="검색">
+					  		</div>
+					  	</form>
+					  		<div>
+							  	<button class="btn btn-info " id="openModalBtn" >도서등록</button>
+					  		</div>
+				  	</div> -->
+			  </div>
+				</tfoot>
 		</table>
-		<a href="/" class="btn btn-primary mt-3">메인 페이지로 돌아가기</a>
+		<!-- <a href="/" class="btn btn-primary mt-3">메인 페이지로 돌아가기</a> -->
 	</div>
 
 </body>

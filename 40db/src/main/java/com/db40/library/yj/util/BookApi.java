@@ -40,7 +40,7 @@ public class BookApi{
 			hm.put("Query", "");
 			hm.put("Query", searchWord);
 			hm.put("QueryType", keyword);
-			hm.put("MaxResults", "10");
+			hm.put("MaxResults", "20");
 			hm.put("start", "1");
 			hm.put("SearchTarget", "Book");
 			hm.put("output", "js");

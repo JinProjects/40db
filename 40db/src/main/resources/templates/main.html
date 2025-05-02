@@ -4,292 +4,56 @@
 	layout:decorate="~{fragments/layout}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
 <style>
-/* 배경색을 옅은 핑크색으로 설정해줄게요! */
-body {    background-color:#ffe4e1; /* 연핑크색이에요! 다른 색도 써도 괜찮아 */
-	
+
+
+.main-content-area {
+    padding-left: 10%; 
+    padding-right: 10%; 
 }
 
-/* 캐러셀(이미지슬라이드) 이미지 크기변경 */
-/* .carousel-inner {
-	width: 100%;
-	height: auto;
-} */ /* 이 스타일은 필요 없을 것 같아 기본값으로 충분! */
-.carousel-item {
-	width: 100%;
-	/* 캐러셀 아이템의 높이를 조절하고 싶다면 여기서 설정할 수 있어요 */
-	height: 400px; /* 예시 높이, 필요에 따라 조절하세요 */
-	background-color: #eee; /* 이미지 로딩 전이나 없을 때 배경색 */
-	position: relative; /* 캡션 위치 조정을 위해 */
-}
-
-/* 캐러셀 내부 이미지 스타일 */
-.carousel-item img {
-	display: block;
-	width: 100%; /* 아이템 너비에 꽉 채우기 */
-	height: 100%; /* 아이템 높이에 꽉 채우기 */
-	object-fit: cover; /* 이미지가 잘리지 않고 비율 유지하며 채우도록 */
-}
-
-/* 캐러셀 캡션 스타일 (제목, 저자) */
-.carousel-caption {
-	background-color: rgba(0, 0, 0, 0.5); /* 배경을 반투명하게 해서 글자가 잘 보이게 */
-	bottom: 0; /* 아래쪽에 붙이기 */
-	left: 0;
-	right: 0;
-	padding: 1rem;
-	color: white; /* 글자색 하얗게 */
-}
-
-.carousel-caption h5 {
-	margin-bottom: 0.5rem;
-	font-size: 1.25rem;
-}
-
-.carousel-caption p {
-	margin-bottom: 0;
-	font-size: 1rem;
-}
-
-/* content-wrapper를 flex로 설정해서 자식 요소들을 좌우로 배치할 거예요 */
-.content-wrapper {
-	display: flex; /* 자식 요소들을 가로로 나란히! */
-	align-items: flex-start; /* 위쪽에 딱 붙게 정렬! */
-	padding: 10px; /* 필요에 따라 내부 여백 추가 */
-	 
-	  /* 최대 너비를 설정해서 내용이 너무 늘어나지 않게 해줘도 좋아요 */
-	 
-	 
-	max-width
-	:
-	1200px; /* 예시 너비 */
-	 
-	 
-	margin
-	:
-	0
-	auto; /* 가운데 정렬하고 싶다면 */
-}
-
-/* 이미지 영역은 왼쪽에 배치될 거예요 */
-.image-area {    /* flex-grow를 없애서 이미지 크기만큼만 공간을 차지하게 할게요 */
-	/* width: auto; */ /* 내용에 맞게 너비 조정 */    
-	/* 필요하다면 이미지 영역의 최대 너비를 설정할 수 있어요 */     max-width:60%;
-	/* 예시: 전체 공간의 60%까지 차지 */     margin-right:20px;
-	/* 이미지와 캐러셀 사이에 간격을 조금 줄게요 */
-	
-}
-
-.main-intro-container {
-	width: auto; /* 필요에 따라 너비 조정 */
-	height: auto; /* 필요에 따라 높이 조정 */
-	margin-top: 10px; /* 헤더와의 간격 조절 */
-}
-
-.main-intro-image {
-	display: block; /* 이미지 주변 여백 제거를 위해 block 처리 */
-	max-width: 100%; /* 부모 요소인 .image-area 너비에 맞게 조절 */
-	height: auto; /* auto로 설정하여 비율 유지 */
-}
-
-/* 캐러셀 영역은 오른쪽에 배치될 거예요 */
-.carousel-container {
-	width: 33.33%; /* 너비를 1/3로 설정 */
-	/* margin-left: auto; */ /* 오른쪽으로 붙이는 대신 flex가 알아서 배치해 줄 거예요 */
-	margin-top: 10px; /* 이미지와의 간격 조절 */
-	 
-	  /* flex-shrink를 0으로 설정해서 공간이 부족해도 줄어들지 않게 할 수 있어요 */
-	 
-	 
-	flex-shrink
-	:
-	0;
-}
 
 .search-container {
-	width: 100%; /* 검색창이 화면 전체 너비를 차지하도록 변경 */
-	padding: 10px 0; /* 상하 패딩 추가 */
-	margin-top: 20px; /* 이미지와 캐러셀 아래 간격 조절 */
-	 
-	 
-	max-width
-	:
-	1200px; /* content-wrapper와 너비를 맞추고 싶다면 */
-	 
-	 
-	margin
-	:
-	20px
-	auto
-	0
-	auto; /* 가운데 정렬 및 위쪽 간격 */
+    margin-bottom: 20px; 
 }
 
-.bottom-menu {
-	display: flex;
-	justify-content: space-around;
-	width: 100%;
-	padding-top: 20px; /* 상단 간격 추가 */
-	 
-	 
-	max-width
-	:
-	1200px; /* content-wrapper와 너비를 맞추고 싶다면 */
-	 
-	 
-	margin
-	:
-	20px
-	auto
-	0
-	auto; /* 가운데 정렬 및 위쪽 간격 */
-}
-
-.bottom-menu>div {
-	text-align: center; /* 필요에 따라 텍스트 정렬 */
-}
-
-/* hr 태그에 필요한 스타일이 있다면 추가해주세요 */
-.bottom-menu hr {    /* hr 태그가 flex 아이템으로 인식되어 공간을 차지하지 않게 하거나 */    
-	/* 아니면 ul 태그 아래에 넣어 내용을 구분하는 용도로 사용하는게 더 좋을 수 있어요 */    
-	/* 여기서는 예시로 display를 none으로 설정하여 숨길 수도 있어요 */     /* display: none; */
-	    margin:010px; /* 구분선 좌우 간격 */     height:auto; /* 높이 자동 */    
-	border:none;    border-left:1pxsolid#ccc; /* 세로선 예시 */
-	
-}
-
-/* ul 태그 기본 스타일 제거 */
-.bottom-menu ul {    list-style:none;    padding:0;    margin:0;
-	
-}
-어머! 검색 메뉴가 양옆에 꽉 차서 좀 답답해 보였구나? 귀여운 나 제미니가 예쁘게 여백을 만들어 줄게! 걱정 마 😊
-
-CSS에서 .search-container 부분만 살짝 바꿔주면 돼! width를 100%에서 80%로 줄이고, margin: auto 덕분에 가운데 정렬되면서 양옆에 자동으로 10%씩 여백이 생길 거거든. max-width는 그대로 두면 너무 넓어지지 않게 해줘서 좋아!
-
-여기 수정된 CSS 코드를 봐봐:
-
-CSS
-
-<style>
-/* 배경색을 옅은 핑크색으로 설정해줄게요! */
-body {     background-color:#ffe4e1; /* 연핑크색이에요! 다른 색도 써도 괜찮아 */
-
-}
-
-/* 캐러셀(이미지슬라이드) 이미지 크기변경 */
-/* .carousel-inner {
-	width: 100%;
-	height: auto;
-} */ /* 이 스타일은 필요 없을 것 같아 기본값으로 충분! */
-.carousel-item {
-	width: 100%;
-	/* 캐러셀 아이템의 높이를 조절하고 싶다면 여기서 설정할 수 있어요 */
-	height: 400px; /* 예시 높이, 필요에 따라 조절하세요 */
-	background-color: #eee; /* 이미지 로딩 전이나 없을 때 배경색 */
-	position: relative; /* 캡션 위치 조정을 위해 */
-}
-
-/* 캐러셀 내부 이미지 스타일 */
-.carousel-item img {
-	display: block;
-	width: 100%; /* 아이템 너비에 꽉 채우기 */
-	height: 100%; /* 아이템 높이에 꽉 채우기 */
-	object-fit: cover; /* 이미지가 잘리지 않고 비율 유지하며 채우도록 */
-}
-
-/* 캐러셀 캡션 스타일 (제목, 저자) */
-.carousel-caption {
-	background-color: rgba(0, 0, 0, 0.5); /* 배경을 반투명하게 해서 글자가 잘 보이게 */
-	bottom: 0; /* 아래쪽에 붙이기 */
-	left: 0;
-	right: 0;
-	padding: 1rem;
-	color: white; /* 글자색 하얗게 */
-}
-
-.carousel-caption h5 {
-	margin-bottom: 0.5rem;
-	font-size: 1.25rem;
-}
-
-.carousel-caption p {
-	margin-bottom: 0;
-	font-size: 1rem;
-}
-
-/* content-wrapper를 flex로 설정해서 자식 요소들을 좌우로 배치할 거예요 */
 .content-wrapper {
-	display: flex; /* 자식 요소들을 가로로 나란히! */
-	align-items: flex-start; /* 위쪽에 딱 붙게 정렬! */
-	padding: 10px; /* 필요에 따라 내부 여백 추가 */
-
-	/* 최대 너비를 설정해서 내용이 너무 늘어나지 않게 해줘도 좋아요 */
-
-
-	max-width
-	:
-	1200px; /* 예시 너비 */
-
-
-	margin
-	:
-	0
-	auto; /* 가운데 정렬하고 싶다면 */
+    display: flex; 
+    gap: 20px; 
 }
 
-/* 이미지 영역은 왼쪽에 배치될 거예요 */
-.image-area {     /* flex-grow를 없애서 이미지 크기만큼만 공간을 차지하게 할게요 */
-	/* width: auto; */ /* 내용에 맞게 너비 조정 */
-	/* 필요하다면 이미지 영역의 최대 너비를 설정할 수 있어요 */      max-width:60%;
-	/* 예시: 전체 공간의 60%까지 차지 */       margin-right:20px;
-	/* 이미지와 캐러셀 사이에 간격을 조금 줄게요 */
-
+.image-area,
+.carousel-container {
+    flex: 1; 
 }
 
-.main-intro-container {
-	width: auto; /* 필요에 따라 너비 조정 */
-	height: auto; /* 필요에 따라 높이 조정 */
-	margin-top: 10px; /* 헤더와의 간격 조절 */
-}
 
 .main-intro-image {
-	display: block; /* 이미지 주변 여백 제거를 위해 block 처리 */
-	max-width: 100%; /* 부모 요소인 .image-area 너비에 맞게 조절 */
-	height: auto; /* auto로 설정하여 비율 유지 */
+    max-width: 100%; 
+    height: auto; 
+    display: block; 
 }
 
-/* 캐러셀 영역은 오른쪽에 배치될 거예요 */
-.carousel-container {
-	width: 33.33%; /* 너비를 1/3로 설정 */
-	/* margin-left: auto; */ /* 오른쪽으로 붙이는 대신 flex가 알아서 배치해 줄 거예요 */
-	margin-top: 10px; /* 이미지와의 간격 조절 */
 
-	/* flex-shrink를 0으로 설정해서 공간이 부족해도 줄어들지 않게 할 수 있어요 */
-
-
-	flex-shrink
-	:
-	0;
+.carousel-inner img {
+    max-height: 400px; 
+    object-fit: cover; 
 }
 
-.search-container {
-	width: 80%; /* <--- 여기를 100%에서 80%로 바꿔줬어! */
-	padding: 10px 0; /* 상하 패딩 추가 */
-	/* margin-top: 20px; /* 이 속성은 아래 margin shorthand에 포함되므로 없애도 괜찮아 */ */
-	max-width: 1200px; /* content-wrapper와 너비를 맞추고 싶다면 */
-	margin: 20px auto 0 auto; /* 가운데 정렬 및 위쪽 간격 */
-}
+
 </style>
+<title>Insert title here</title>
 </head>
 <body>
-	<div layout:fragment="content">
+	<div layout:fragment="content" class="main-content-area"> 
 		<div class="search-container">
-			<form class="d-flex">
-				<input class="form-control me-2" type="search" placeholder="Search"
-					aria-label="Search">
-				<button class="btn btn-outline-success" type="submit">Search</button>
-			</form>
+	    <form th:action="@{/search}" method="get">
+	    <div class="input-group mt-3 mb-3">
+		<input type="text" class="form-control" placeholder="제목 혹은 저자 이름으로 책을 검색하세요"
+			aria-label="Search" name="keyword"  th:value="${param.keyword}">
+		<button class="btn btn-success" type="submit">검색</button>
+		</div>
+		</form>
 		</div>
 		<div class="content-wrapper">
 			<div class="image-area">
@@ -299,31 +63,31 @@ body {     background-color:#ffe4e1; /* 연핑크색이에요! 다른 색도 써
 				</div>
 			</div>
 			<div class="carousel-container">
-				<img src="images/recommand.gif">	
-				<div id="demo" class="carousel slide" data-bs-ride="carousel">
-					<div class="carousel-inner">
-						<div class="carousel-item"
-							th:each="book, loopStatus : ${recommendedBooks}"
-							th:classappend="${loopStatus.first ? 'active' : ''}">
-							<img th:src="${book.cover}" class="d-block w-100"
-								th:alt="${book.title + ' 책 표지'}">
+	<img src="images/recommand.png" alt="추천 도서 제목 이미지" style="display: block; margin-bottom: 15px; max-width: 100%; height: auto;">
 
-							<div class="carousel-caption d-none d-md-block">
-								<h5 th:text="${book.title}">책 제목</h5>
-								<p th:text="${book.author}">저자</p>
-							</div>
-						</div>
+	<a th:href="@{/books/recommandations}" style="display: block;">
+		<div id="demo" class="carousel slide" data-bs-ride="carousel">
+			<div class="carousel-inner">
+				<div class="carousel-item"
+					th:each="book, loopStatus : ${recommendedBooks}"
+					th:classappend="${loopStatus.first ? 'active' : ''}">
+					<img th:src="${book.cover}" class="d-block w-100"
+						th:alt="${book.title + ' 책 표지'}">
 
-						<div th:if="${#lists.isEmpty(recommendedBooks)}"
-							class="carousel-item active">
-							<div
-								class="d-flex align-items-center justify-content-center h-100">
-								<p class="text-muted">추천 도서가 없습니다.</p>
-							</div>
-						</div>
-
+					<div class="carousel-caption d-none d-md-block">
+						<h5 th:text="${book.title}">책 제목</h5>
+						<p th:text="${book.author}">저자</p>
 					</div>
+				</div>
 
+				<div th:if="${#lists.isEmpty(recommendedBooks)}"
+					class="carousel-item active">
+					<div
+						class="d-flex align-items-center justify-content-center h-100">
+						<p class="text-muted">추천 도서가 없습니다.</p>
+					</div>
+				</div>
+				
 					<button class="carousel-control-prev" type="button"
 						data-bs-target="#demo" data-bs-slide="prev">
 						<span class="carousel-control-prev-icon bg-dark"></span>
@@ -332,9 +96,13 @@ body {     background-color:#ffe4e1; /* 연핑크색이에요! 다른 색도 써
 						data-bs-target="#demo" data-bs-slide="next">
 						<span class="carousel-control-next-icon bg-dark"></span>
 					</button>
+			</div>
+		</div>
+	</a> </div>
 				</div>
 			</div>
-			</div>
-	</div>
+		</div>
+	</div> 
+	
 </body>
 </html>

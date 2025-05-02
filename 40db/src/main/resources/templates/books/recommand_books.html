@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div layout:fragment="content" class="container pt-5">
-		<h1 class="mb-4">이달의 추천 도서</h1>
+		<h1 class="mb-4">오늘의 추천 도서</h1>
 		<div th:if="${not #lists.isEmpty(recommandations)}">
 			<div class="row row-cols-1 row-cols-md-2 g-4">
 				<div th:each="book : ${recommandations}" class="col">
@@ -23,7 +23,7 @@
 							</div>
 							<div class="col-md-8">
 								<div class="card-body">
-									<h5 class="card-title" th:text="${book.title}">책 제목</h5>
+									<a th:href="${book.link}" ><h5 class="card-title" th:text="${book.title}">책 제목</h5></a>
 									<p class="card-text mb-1">
 										<strong>저자:</strong> <span th:text="${book.author}">저자</span>
 									</p>

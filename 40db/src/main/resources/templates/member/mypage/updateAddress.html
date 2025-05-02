@@ -6,7 +6,7 @@
 <!-- ##1 -->
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>마이페이지</title>
 </head>
 <body style="background-color:#D9D9D9">
 	<div layout:fragment="content">
@@ -20,25 +20,17 @@
 				  <section class="bg-white rounded-circle d-flex justify-content-center align-items-center position-relative" style="width: 100%; height: 90%;">
 				    
 				    <!-- 아바타 이미지-->
-				    <img src="/images/member_avatar.png" alt="아바타"
-				         class="position-absolute"
-				         style="z-index: 1; max-width: 90%; max-height: 80%;">
-				    
-				    <div style="z-index: 2; position: relative; color: gray;">아바타 바꾸기</div>
+				    <img src="/40db/images/member_avatar.png" alt="아바타" class="position-absolute" style="z-index: 1; max-width: 90%; max-height: 80%;">
+				    	
+				    <div class="d-none" style="z-index: 2; position: relative; color: gray;">아바타 바꾸기</div>
 				
 				  </section>
 				</div>
 				
 				<!-- 사용자 별명(displayName) -->
 				<div class="container bg-secondary text-white d-flex flex-column" style="max-width: 60%; max-height: 100%;">
-				  <h1 class="row align-items-end" th:href="@{/member/member}" sec:authorize="isAuthenticated()"
-				      sec:authentication="principal.username" style="font-size: 55px; height: 50%"> </h1>
-				  
-				  <div class="container bg-secondary text-dark d-flex align-items-end" style="height: 40%;">
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  	<span class="badge bg-success col-2" style="height: 20%">dd</span>
-				  </div>
+						  <h1 class="row align-items-end text-white displayName2" id="displayName2" style="font-size: 55px; height: 50%"></h1>
+						  <span class="badge bg-dark col-6 memberId2" style="font-size: 15px" sec:authorize="isAuthenticated()"  sec:authentication="principal.username" id="memberId2"></span>
 				</div>
 			
 			</div>
@@ -50,76 +42,75 @@
 
 
 					<!-- 메인 -->
+				<div class="bg-white shadow-lg rounded-3 me-auto" style="width: 74%; padding: 50px 32px; font-size: 1.1rem;">
+				    <h1 class="mb-4 text-primary">
+				        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+				            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+				        </svg> 주소 변경
+				    </h1>
+				
+				    <form method="post" th:action="@{/member/mypage/uaddress}" style="display: flex; flex-direction: column; align-items: center; gap: 28px; padding-top: 4rem;">
+						<input type="text" name="memberId" id="memberId" class="form-control d-none" th:value="${#authentication.name}" readonly>				
+				        <div class="w-75 d-flex gap-3">
+				        
+				            <div class="form-floating flex-grow-1">
+				                <input type="text" name="addressPost" id="addressPost" class="form-control" placeholder="우편번호" readonly>
+				                <label for="addressPost">우편번호</label>
+				            </div>
+				            <button type="button" class="btn btn-outline-primary btn-lg" onclick="addressFinder()" style="min-width: 120px;">검색</button>
+				        </div>
+				
+				        <div class="w-75 d-flex gap-4">
+				            <div class="form-floating w-100">
+				            
+				                <input type="text" name="addressRoad" id="addressRoad" class="form-control" placeholder="도로명 주소" readonly>
+				                <label for="addressRoad">도로명 주소</label>
+				            </div>
+				        </div>
+				        <div class="w-75 d-flex gap-4">
+				            <div class="form-floating w-100">
+				                <input type="text" name="addressJibun" id="addressJibun" class="form-control" placeholder="지번 주소" readonly>
+				                <label for="addressJibun">지번 주소</label>
+				            </div>
+				        </div>
+				
+				        <div class="w-75 d-flex gap-4">
+				            <div class="form-floating w-50">
+				                <input type="text" name="addressDetail" id="addressDetail" class="form-control" placeholder="상세주소">
+				                <label for="addressDetail">상세 주소</label>
+				                 <small id="addressGuide" class="form-text text-muted">상세 주소를 입력해주세요.</small>
+				            </div>
+				            <div class="form-floating w-50">
+				                <input type="text" name="addressExtra" id="addressExtra" class="form-control" placeholder="참조주소" readonly>
+				                <label for="addressExtra">참조 주소</label>
+				            </div>
+				        </div>
+				
+				        <div class="d-flex justify-content-center w-75 mt-4 gap-4">
+				            <button type="button" class="btn btn-outline-secondary btn-lg" onclick="window.location.reload();">새로고침</button>
+				            <input type="submit" class="btn btn-primary btn-lg px-5" value="변경하기">
+				        </div>
+				    </form>
+				</div>
+				
+				<!-- 내비게이터 -->
+				<div class="d-flex flex-column align-items-end bg-light" style="height: 100%; width: 25%; gap:20px">
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">회원 정보</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일 변경</a></div>
+				    <div class="btn text-dark shadow" style="width: 100%; background-color: #e4e6e9; border-color: #e4e6e9"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/udname}" style="text-decoration: none; color:black;">별명 변경</a></div>
+				    <div class="btn btn-outline-light bg-white text-dark shadow-sm mb-3" style="width: 100%; margin-top: auto;"><a th:href="@{/member/mypage/deleteAccount}" style="text-decoration: none; color: #f44949;">회원탈퇴</a></div>
+				</div>
+			  
+			  </div>
+			</div>
 
-					<div class="bg-white p-4 shadow-lg rounded-3 me-auto" style="width: 74%;">
-						<div class="card p-4 shadow-sm">
-							<h4 class="card-title mb-4 text-primary">현재 주소지</h4>
-
-							<!-- 주소 -->
-							<form class="mb-4" method="post" th:action="@{/member/mypage/uaddress}">
-								<label class="form-label text-muted">주소</label>
-									
-								<!-- 우편번호 + 검색 버튼 레이어 -->
-								<div class="card border-light mb-3">
-								<input type="text" name="memberId" id="memberId" class="form-control d-none" th:value="${#authentication.name}" readonly>
-									<div class="card-body">
-										<div class="row g-3">
-											<div class="col-md-4">
-												<input type="text" name="addressPost" id="addressPost"
-													class="form-control" placeholder="우편번호" readonly>
-											</div>
-											<div class="col-md-2">
-												<button type="button" class="btn btn-outline-primary w-100"
-													onclick="addressFinder()">검색</button>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- 도로명 / 지번 주소 레이어 -->
-								<div class="card border-light mb-3">
-									<div class="card-body">
-										<div class="row g-3">
-											<div class="col-md-6">
-												<input type="text" name="addressRoad" id="addressRoad"
-													class="form-control" placeholder="도로명주소" readonly>
-											</div>
-											<div class="col-md-6">
-												<input type="text" name="addressJibun" id="addressJibun"
-													class="form-control" placeholder="지번주소" readonly>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- 상세 주소 레이어 -->
-								<div class="card border-light mb-3">
-									<div class="card-body">
-										<div class="row g-3">
-											<div class="col-md-6">
-												<input type="text" name="addressDetail" id="addressDetail"
-													class="form-control" placeholder="상세주소"> <small
-													id="addressGuide" class="form-text text-muted">상세
-													주소를 입력해주세요.</small>
-											</div>
-											<div class="col-md-6">
-												<input type="text" name="addressExtra" id="addressExtra"
-													class="form-control" placeholder="참조주소" readonly>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="container mt-5">
-									<div class="d-flex justify-content-end">
-										<div class="btn btn-outline-primary mx-3" onclick="window.location.reload();">새로고침</div>
-										<input type="submit" class="btn btn-outline-success" value="변경하기">
-									</div>
-								</div>
-
-							</form>
-						</div>
-					</div>
-					
+		</div>
+				
+				<script th:if="${success}" th:inline="javascript"> alert([[${success}]]);</script>
+ 				<script th:if="${fail}" th:inline="javascript"> alert([[${fail}]]);</script>
 					
 					<!-- 페이지 로딩 시 사용자의 주소 정보 가져오기 -->
 					<script>
@@ -252,21 +243,24 @@
 					</script>
 					<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
 				
-				<!-- 내비게이터 -->
-			    <div class="d-flex flex-column align-items-end bg-light" style="height: 100%; width: 25%; gap:20px">
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm mt-3" style="width: 100%"><a th:href="@{/member/mypage/main}" style="text-decoration: none; color:black;">도서대출현황</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/upass}" style="text-decoration: none; color:black;">비밀번호변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uemail}" style="text-decoration: none; color:black;">이메일변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/uaddress}" style="text-decoration: none; color:black;">주소지변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%"><a th:href="@{/member/mypage/umobile}" style="text-decoration: none; color:black;">휴대전화번호변경</a></div>
-			    	<div class="btn btn-outline-light bg-white text-dark shadow-sm" style="width: 100%">별명변경</div>
-			    </div>
-			  
-			  </div>
-			</div>
+		<script>
+  	// memberId값으로 displayName 값 가져오기
+  	 $(document).ready(function() {
+         var memberId2 = $("#memberId2").text().trim();
 
-		</div>
-		
+         $.ajax({
+             url: "/40db/getDisplayNameByMemberId",
+             method: "GET",
+             data: { memberId: memberId2 },
+             success: function(displayName) {
+                 $('#displayName2').text(displayName);
+             },
+             error: function() {
+                 console.log("displayName을 가져오는 데 실패했습니다.");
+             }
+         });
+     });
+	</script>
 
 
 	</div>

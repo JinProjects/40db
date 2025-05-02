@@ -2,6 +2,7 @@ package com.db40.library.binary3300;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -56,7 +57,7 @@ public class BookHopeService {
 
 	@Transactional
 	public BookHope saveBookHope(BookHope bookHope) {
-		bookHope.setBook_hope_stat("NOPE");
+		bookHope.setBook_hope_stat("신청중");
 		return bookHopeRepository.save(bookHope);
 	}
 
@@ -64,10 +65,19 @@ public class BookHopeService {
 		return bookHopeRepository.findAll();
 	}
 
-	// 관리자, 책 반려
-//	  public boolean hopeAdminUpdate(Long bookHopeNo, String status) { BookHope
-//	  bookHope = bookHopeRepository.findBybookHopeNo(bookHopeNo);
-//	  }
+	// 관리자, 책 반려... 여기서 api가져오기 
+	public boolean hopeAdminUpdate(Long bookHopeNo, String status) {
+		Optional<BookHope> optionalBookHope= bookHopeRepository.findById(bookHopeNo);
+		
+		if (optionalBookHope.isPresent()) {
+	        BookHope bookHope = optionalBookHope.get();
+	        bookHope.setBook_hope_stat(status); // 상태 변경
+	        bookHopeRepository.save(bookHope); // DB 저장
+	        return true;
+	    } else {
+	        return false;
+	    }
+	  }
 	 
 
 }
