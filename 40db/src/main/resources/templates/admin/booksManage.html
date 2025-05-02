@@ -58,71 +58,71 @@
 		        console.error("Success modal element with ID 'successAlertModal' not found!");
 		    }
 			
-			searchBtn.addEventListener('click', function(){
-				let selectKeyword = document.getElementById('findKeywords').value;
-				let searchWord = document.getElementById('findBook').value;
-				$(".book_result tbody").empty();
-				if(selectKeyword == ''){
-					alert("옵션을 선택해주세요!")
-					return;	
-				}
-				if(searchWord == ''){
-					alert("검색어를 입력해주세요!")
-					return;	
-				}
-				$.ajax({
-					url:"/40db/books/findBook/"+encodeURIComponent(searchWord)+"/"+encodeURIComponent(selectKeyword)+"?ajax=true",
-					type:"GET",
-					dataType:"json",
-				 	contentType:"application/json;charset=UTF-8",
-					error:function(xhr, status, msg){ 
-						console.log("에러");
-						console.log(status + "/" + msg);
-					},
-					success:function(json){
-						console.log(json.item);
-						//$(".book_result tbody").empty();
-						let tableBody = $(".book_result tbody");
-						if(json && json.item && json.item.length > 0){
-							let items = json.item;
-							for(let i=0; i<items.length; i++){
-						 		let book_title = items[i].title;
-								let book_isbn = items[i].isbn;
-								let book_cover = items[i].cover;
-								let book_author = items[i].author;
-								let book_publisher = items[i].publisher;
-								let book_description = items[i].description;
-								let book_published_date= items[i].pubDate;
-								let book_total_page = '500';
-								let category_name = items[i].categoryName;
-								let book_category_name = items[i].categoryName.replace("국내도서>","").substring(0,category_name.replace("국내도서>","").indexOf(">"));
-								let row = `
-									<tr>
-										<td>${book_title}</td>
-										<td>${book_isbn}</td>
-										<td><img src="${book_cover}" alt="${book_title}" style="width:50px; height:auto"></td>
-										<td>${book_author}</td>
-										<td>${book_publisher}</td>
-										<td>${book_category_name}</td>
-										<td><a href="#" class="btn btn-success btn-sm register-btn" id="bookRegBtn"
-											data-book_title="${book_title}"
-											data-book_isbn="${book_isbn}"
-											data-book_cover="${book_cover}"
-											data-book_author="${book_author}"
-											data-book_publisher="${book_publisher}"
-											data-book_description="${book_description}"
-											data-book_published_date="${book_published_date}"
-											data-book_category_name="${book_category_name}"
-											>등록</a></td>
-									</tr>
-								`
-								tableBody.append(row);
-							}
-						}else{
-							 tableBody.append('<tr><td colspan="7">검색 결과가 없습니다.</td></tr>');
-						}
+			searchBtn.addEventListener('click', function(e){
+					let selectKeyword = document.getElementById('findKeywords').value;
+					let searchWord = document.getElementById('findBook').value;
+					$(".book_result tbody").empty();
+					if(selectKeyword == ''){
+						alert("옵션을 선택해주세요!")
+						return;	
 					}
-				})
+					if(searchWord == ''){
+						alert("검색어를 입력해주세요!")
+						return;	
+					}
+					$.ajax({
+						url:"/40db/books/findBook/"+encodeURIComponent(searchWord)+"/"+encodeURIComponent(selectKeyword)+"?ajax=true",
+						type:"GET",
+						dataType:"json",
+					 	contentType:"application/json;charset=UTF-8",
+						error:function(xhr, status, msg){ 
+							console.log("에러");
+							console.log(status + "/" + msg);
+						},
+						success:function(json){
+							console.log(json.item);
+							//$(".book_result tbody").empty();
+							let tableBody = $(".book_result tbody");
+							if(json && json.item && json.item.length > 0){
+								let items = json.item;
+								for(let i=0; i<items.length; i++){
+							 		let book_title = items[i].title;
+									let book_isbn = items[i].isbn;
+									let book_cover = items[i].cover;
+									let book_author = items[i].author;
+									let book_publisher = items[i].publisher;
+									let book_description = items[i].description;
+									let book_published_date= items[i].pubDate;
+									let book_total_page = '500';
+									let category_name = items[i].categoryName;
+									let book_category_name = items[i].categoryName.replace("국내도서>","").substring(0,category_name.replace("국내도서>","").indexOf(">"));
+									let row = `
+										<tr>
+											<td>${book_title}</td>
+											<td>${book_isbn}</td>
+											<td><img src="${book_cover}" alt="${book_title}" style="width:50px; height:auto"></td>
+											<td>${book_author}</td>
+											<td>${book_publisher}</td>
+											<td>${book_category_name}</td>
+											<td><a href="#" class="btn btn-success btn-sm register-btn" id="bookRegBtn"
+												data-book_title="${book_title}"
+												data-book_isbn="${book_isbn}"
+												data-book_cover="${book_cover}"
+												data-book_author="${book_author}"
+												data-book_publisher="${book_publisher}"
+												data-book_description="${book_description}"
+												data-book_published_date="${book_published_date}"
+												data-book_category_name="${book_category_name}"
+												>등록</a></td>
+										</tr>
+									`
+									tableBody.append(row);
+								}
+							}else{
+								 tableBody.append('<tr><td colspan="7">검색 결과가 없습니다.</td></tr>');
+							}
+						}
+					})
 			});
 			/* 책등록 */
 			  $(".book_result tbody").on('click', '.register-btn', function(event) {
@@ -316,16 +316,16 @@
 		<div class="container mt-3">
 		<input type="hidden" id="actionData" th:value="${action}">
 		  <h2>도서관리</h2>
-		  <table style="caption-side: top;" class="table table-hover">
+		  <table style="caption-side: top;" class="table table-hover text-center">
 		  <caption>도서리스트</caption>
 		    <thead>
 		      <tr class="table-secondary">
-		        <th>번호</th>
-		        <th>도서명</th>
-		        <th>저자</th>
-		        <th>isbn</th>
-		        <th>입고일</th>
-		        <th style="width: 10%">삭제</th>
+		        <th scope="col" style="width: 5%">번호</th>
+		        <th scope="col">도서명</th>
+		        <th scope="col">저자</th>
+		        <th scope="col">isbn</th>
+		        <th scope="col" style="width: 10%">입고일</th>
+		        <th scope="col" style="width: 10%">삭제</th>
 		      </tr>
 		    </thead>
 		    <tbody>
@@ -423,7 +423,7 @@
 						<div class="d-flex">
 							<select name="findKeywords" id="findKeywords">
 								<option value="">선택</option>
-								<option value="title">서명</option>
+								<option value="title">도서명</option>
 								<option value="author">저자</option>
 								<option value="publisher">발행자</option>
 							</select>

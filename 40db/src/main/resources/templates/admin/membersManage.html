@@ -103,21 +103,23 @@ layout:decorate="~{fragments/admin/adminLayout}">
 	<th:block layout:fragment="content">
 		<div class="container mt-3">
 		  <h2>회원관리</h2>
-		  <table style="caption-side: top" class="table table-hover member-result">
+		  <table style="caption-side: top" class="table table-hover member-result text-center">
 		  <caption>회원리스트</caption>
 		    <thead>
 		      <tr class="table-secondary">
-		        <th>번호</th>
+		        <th style="width: 5%">번호</th>
 		        <th>회원아이디</th>
 		        <th>이메일</th>
 		        <th>휴대폰번호</th>
 		        <th>주소</th>
-		        <th>경고횟수</th>
-		        <th>회원상태</th>
-		        <th>가입일</th>
+		        <th style="width: 8%">경고횟수</th>
+		        <th style="width: 8%">회원상태</th>
+		        <th style="width: 10%">가입일</th>
 		        <th>IP</th>
-		        <th>수정</th>
-		        <th style="width: 8%">탈퇴</th>
+		       <!--  <th>수정</th>
+		        <th>탈퇴</th> -->
+		        <th style="width: 6%">수정</th>
+		        <th style="width: 6%">탈퇴</th>
 		      </tr>
 		    </thead>
 		    <tbody>
